@@ -1,4 +1,40 @@
-# Getting Started with Create React App
+# IT's My Plan - ToDoList
+[05.06 - 06.28]
+
+## 프론트엔드 React 스터디
+
+<br>
+
+## 📌 목적
+- 리액트와 Supabase를 활용한 간단한 CRUD 기능 경험, 리액트 컴포넌트, 상태관리 학습 및 개인 프로젝트 배포 하기
+
+<br>
+
+## 📌 개발환경
+- 언어: Javascript
+- 프레임워크: React.js
+- 오픈소스: Supabase
+- 배포: AWS
+
+<br>
+
+## 📌 기능 List
+- Todo CRUD
+- Todo 완료 상태관리
+- 구글 캘린더 API
+- 로그인/회원가입 기능 (회원정보 DB저장)
+
+<br>
+
+## 📌 화면설계
+<img alt="화면설계" src="https://github.com/kimseryeong/react_study/assets/106288108/ca66b96b-3d91-492d-9b9c-6ebff1be7f81"/>
+
+<br>
+
+## 📌 ERD
+<img alt="ERD" src="https://github.com/kimseryeong/react_study/assets/106288108/bd51a397-4397-40f7-b982-1a78f1cad744"/>
+
+<!-- # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -67,4 +103,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 ### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify) -->
