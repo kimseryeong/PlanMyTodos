@@ -1,0 +1,72 @@
+:root{
+    --size: 10px;
+}
+button:hover{
+    box-shadow: 1px 1px 1px #aba9a9;
+}
+
+.header{
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    background-color: #fff;
+}
+
+/* ToDoList text */
+.logo{
+    padding-left: var(--size);
+    font-weight: 600;
+    font-size: 30px;
+}
+
+/* login & SignIn Button */
+.btn-contents{
+    display: flex;
+    margin-left: auto;
+    padding: 0 var(--size);
+}
+
+.btn-contents button, .btn{
+    width: 90px;
+    height: 40px;
+    font-size: 24px;
+    font-family: 'Ownglyph_Dailyokja-Rg';
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: var(--size);
+    margin: 5px;
+}
+.wrap{
+    margin: 10px 20px;
+}
+
+.input-wrap{
+    display: flex;
+    flex-direction: column;
+}
+
+.input-wrap input {
+    font-family: 'Ownglyph_Dailyokja-Rg';
+    height: 45px;
+    margin: 5px;
+    padding-left: var(--size);
+    font-size: 18px;
+    border: 1px solid #ddd;
+}
+.input-wrap input::placeholder {
+    font-size: 18px;
+    font-weight: 200;
+    font-style: italic;
+    color: #aba9a9;
+}
+
+.btn-wrap{
+    margin-top: 20px;
+}
+
+.backColor{
+    background-color: bisque;
+}

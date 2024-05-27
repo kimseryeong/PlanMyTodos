@@ -1,0 +1,16 @@
+.contents{
+    display: flex;
+    height: 100vh;
+}
+
+.left{
+    width: 40%;
+    border-right-width: 2px;
+    border-right-color: #ddd;
+    border-right-style: solid;
+    border-right-style: 1px solid;
+}
+
+.right{
+    width: 60%;
+}
