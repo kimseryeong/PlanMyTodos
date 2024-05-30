@@ -1,6 +1,6 @@
 import './Header.css';
 import Login from './Login';
-import Signin from './Signin';
+import Signup from './Signup';
 
 const Header = () => {
     return (
@@ -8,7 +8,7 @@ const Header = () => {
             <p className='logo'>ToDoList</p>
             <div className='btn-contents'>
                 <Login>Login</Login>
-                <Signin>Sign In</Signin>
+                <Signup>Sign Up</Signup>
             </div>
         </header>
     );

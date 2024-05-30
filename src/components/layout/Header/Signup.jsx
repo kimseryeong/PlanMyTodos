@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-const Signin = ({children}) => {
+
+
+const Signup = ({children}) => {
+
     const style = {
         overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",}
         ,content: {
@@ -15,36 +18,37 @@ const Signin = ({children}) => {
         }
     }
 
-    const [signinOpen, setSigninOpen] = useState(false);
+    const [signupOpen, setSignupOpen] = useState(false);
 
-    const signinClick = () => {
-        setSigninOpen(true);
+    const signupClick = () => {
+        setSignupOpen(true);
     }
 
-    const closeSignin = () => {
-        setSigninOpen(false);
+    const closeSignup = () => {
+        setSignupOpen(false);
     }
 
     return (
         <>
-            <button onClick={signinClick}>{children}</button>
+            <button onClick={signupClick}>{children}</button>
 
             <Modal
-                isOpen={signinOpen}
-                onRequestClose={closeSignin}
+                isOpen={signupOpen}
+                onRequestClose={closeSignup}
                 style={style}
             >
+                
                 <div className='signin-wrap'>
                     <h1>{children}</h1>
 
                     <div className='input-wrap wrap'>
                         <input className='input_row' type='text' name='email' placeholder='email'/>
                         <input className='input_row' type='text' name='name' placeholder='name'/>
-                        <input className='input_row' type='password' name='password' placeholder='password'/>
-                        <input className='input_row' type='password' name='passwordRight' placeholder='correct your password'/>
+                        <input className='input_row' type='password' name='password' placeholder='password' />
+                        <input className='input_row' type='password' name='passwordCheck' placeholder='correct your password'/>
                     </div>
                     <div className='btn-wrap wrap'>
-                        <button className='btn' onClick={closeSignin}>cancel</button>
+                        <button className='btn' onClick={closeSignup}>cancel</button>
                         <button className='btn backColor'>{ children }</button>
                     </div>
                 </div>
@@ -52,4 +56,4 @@ const Signin = ({children}) => {
         </>
     );
 }
-export default Signin;
+export default Signup;

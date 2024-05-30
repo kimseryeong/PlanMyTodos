@@ -7,7 +7,7 @@ import Contents from './Contents/Contents';
 const Layout = () => {
     return (
         <div className='layout'>
-            <Header />
+            <Header/>
             <Contents />
         </div>
     );
