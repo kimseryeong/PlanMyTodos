@@ -77,8 +77,10 @@ button:hover{
     background-color: bisque;
 }
 
-.wrongPw{
+.err{
     color: red;
     padding-left: 10px;
     text-align: left;
+    font-family: 'Pretendard-Regular';
+    font-size: 12px;
 }
