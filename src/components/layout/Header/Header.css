@@ -1,14 +1,22 @@
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-weight: 400;
+    /* font-weight: 400; */
     font-style: normal;
 }
 :root{
     --size: 10px;
+    --font: 'Pretendard-Regular';
 }
+
+body{
+    font-family: var(--font) ;
+}
+
 button:hover{
-    box-shadow: 1px 1px 1px #aba9a9;
+    box-shadow: 1px 1px 1px #ddd;
+    cursor: pointer;
+    /* box-shadow: 1px 1px 1px #aba9a9; */
 }
 
 .header{
@@ -33,13 +41,13 @@ button:hover{
     display: flex;
     margin-left: auto;
     padding: 0 var(--size);
+    align-items: center;
 }
 
 .btn-contents button, .btn{
-    width: 90px;
-    height: 40px;
-    font-size: 24px;
-    font-family: 'Ownglyph_Dailyokja-Rg';
+    width: 80px;
+    height: 35px;
+    font-size: 15px;
     background-color: white;
     border: 2px solid #ddd;
     border-radius: var(--size);
@@ -53,9 +61,23 @@ button:hover{
     display: flex;
     flex-direction: column;
 }
+.input-container{
+    display: flex;
+    align-items: center;
+}
+.icon{
+    width: 25px;
+    height: 25px;
+}
+.text{
+    text-align: left;
+    padding-left: var(--size);
+}
+.login input{
+    width: 100%;
 
+}
 .input-wrap input {
-    font-family: 'Pretendard-Regular';
     height: 45px;
     margin: 5px;
     padding-left: var(--size);
@@ -63,10 +85,10 @@ button:hover{
     border: 1px solid #ddd;
 }
 .input-wrap input::placeholder {
-    font-size: 18px;
-    font-weight: 200;
+    font-size: 15px;
+    /* font-weight: thin; */
     font-style: italic;
-    color: #aba9a9;
+    color: #ddd;
 }
 
 .btn-wrap{
@@ -81,6 +103,12 @@ button:hover{
     color: red;
     padding-left: 10px;
     text-align: left;
-    font-family: 'Pretendard-Regular';
     font-size: 12px;
+}
+.loginErr{
+    padding-left: 33px;
+}
+
+.userEmail{
+    font-size: 20px;
 }

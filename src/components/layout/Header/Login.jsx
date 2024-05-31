@@ -1,8 +1,12 @@
 import { supabase } from '../../../lib/supabaseClient';
+import { globalState } from '../../../lib/atom';
 
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
+import { FaUser } from 'react-icons/fa'
+import { GrSecure } from 'react-icons/gr'
+import { useRecoilState } from 'recoil';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",}
@@ -36,6 +40,14 @@ const Login = ({children}) => {
                 .eq('password', inputs.password)
 
             console.log('length: ', data.length);
+            
+            if(data.length === 0){
+                alert('일치하는 회원 정보가 없습니다. ');
+                return;
+            }
+
+            setSession(data[0]);
+            closeLogin();
         }
         catch (error){
             console.log(error);
@@ -43,6 +55,15 @@ const Login = ({children}) => {
         }
 
     }
+
+    //supabase select 후 session 에 담기
+    const setSession = (data)=>{
+        sessionStorage.setItem('loginEmail', data.email);
+
+        const loginEmail = sessionStorage.getItem('loginEmail');
+        setUserSession(loginEmail);
+    }
+    const [userSession, setUserSession] = useRecoilState(globalState);
 
     return (
         <>
@@ -55,22 +76,39 @@ const Login = ({children}) => {
             >
             <form onSubmit={handleSubmit(onSubmit)}>
                 <h1>{children}</h1>
-                <div className='input-wrap wrap'>
-                    <input 
-                        className='input_row' 
-                        type='text' 
-                        name='email' 
-                        placeholder='email'
-                        {...register('email', {required: true, pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i})}
-                    />
-                    {errors.email && <span className='err'>Check your email</span>}
-                    <input 
-                        className='input_row' 
-                        type='password' 
-                        name='password' 
-                        placeholder='password'
-                        {...register('password', {required: true})}
-                    />
+                <div className='wrap input-wrap login'>
+                    <div className='input-container'>
+                        
+                        <span className='icon'><FaUser size='25'/></span>
+                        
+                        <input 
+                            className='input_row' 
+                            type='text' 
+                            name='email' 
+                            placeholder='email'
+                            {...register('email', {
+                                required: 'email은 필수입니다.'
+                                , pattern: {value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+                                            ,message: '이메일 형식을 확인하세요.'}
+                            })}
+                        />
+                    </div>
+                    {errors.email && <span className='err loginErr'>{ errors.email.message }</span>}
+                    
+                    <div className='input-container'>
+                        <span className='icon'><GrSecure size='25'/></span>
+                        <input 
+                            className='input_row' 
+                            type='password' 
+                            name='password' 
+                            placeholder='password'
+                            {...register('password', {
+                                required: '비밀번호는 필수입니다.'
+                            })}
+                        />
+                    </div>
+                        
+                    {errors.password && <span className='err loginErr'>{ errors.password.message }</span>}
                 </div>
                 <div className='btn-wrap wrap'>
                     <button className='btn' onClick={closeLogin}>cancel</button>
