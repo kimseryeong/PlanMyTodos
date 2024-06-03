@@ -112,3 +112,40 @@ button:hover{
 .userEmail{
     font-size: 20px;
 }
+.hr-sect{
+    color: #a0a0a0;
+    font-size: 16px;
+    display: flex;
+    flex-basis: 100%;
+    align-items: center;
+    margin: 20px 0;
+}
+.hr-sect::before, 
+.hr-sect::after{
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    line-height: 0;
+    margin: 0 16px;
+    background-color: #a0a0a0;
+}
+.googleBtn{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    width: 90%;
+    height: 45px;
+    margin: 5px;
+    padding-left: var(--size);
+    font-size: 18px;
+    border: 1px solid #1976D2;
+}
+.googleBtn:hover{
+    box-shadow: 1px 1px 1px #1976D2;;
+}
+.social-logo{
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+}

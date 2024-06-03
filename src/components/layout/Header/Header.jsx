@@ -2,6 +2,7 @@ import './Header.css';
 import Login from './Login';
 import Signup from './Signup';
 import { globalState } from '../../../lib/atom';
+import { supabase } from '../../../lib/supabaseClient';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -11,10 +12,14 @@ const Header = () => {
     // console.log('Header에서 userSession: ', userSession);
 
     //logout
-    const onLogout = () => {
-        sessionStorage.removeItem('userEmail');
+    const onLogout = async () => {
+        const { error } = await supabase.auth.signOut();
 
+        localStorage.removeItem('userEmail');
         setUserSession(null);
+
+        alert('로그아웃 되었습니다.');
+        if(error) console.log('error: ', error);
     }
 
     return (

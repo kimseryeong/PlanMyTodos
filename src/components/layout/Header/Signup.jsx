@@ -11,7 +11,7 @@ const style = {
     ,content: {
         textAlign: 'center'
         ,width: '400px'
-        ,height: '410px'
+        ,height: '360px'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
@@ -28,48 +28,32 @@ const Signup = ({children}) => {
 
     //signup form submit
     const { register, handleSubmit, watch, formState: {errors}, getValues } = useForm();
-    const onSubmit = (data) => onSignup(data);
-
-    const onSignup = async (inputs) => {
-
-        //email 중복 확인
-        const {data, error} = await supabase
-            .from('USER_INFO')
-            .select('email')
-            .eq('email', inputs.email)
-            
+    const onSubmit = async (inputs) => {
         
-        if(data.length > 0){
-            alert('이미 사용중인 이메일입니다.');
+        //supabase email signup
+        const {data, error} = await supabase.auth.signUp({
+            email: inputs.email,
+            password: inputs.password,
+            options: {data: {password: inputs.password}}
+        })
+
+        if(error){
+            if(error.status === 422){
+                alert('이미 등록된 사용자입니다.');
+            }
+            else{
+                alert('문제가 발생하였습니다. 다시 시도하십시오.');
+            }
             return;
         }
-
-        try{
-            const {data, error} = await supabase
-                .from('USER_INFO')
-                .insert([
-                    {
-                        email: inputs.email
-                        , name: inputs.name
-                        , password: inputs.password
-                    }
-                ])
-                .select('*')
-                
-            setSession(data[0]);
-            closeSignup();
-        }
-        catch (error) {
-            // console.log(error);
-            alert('문제가 발생하였습니다. 다시 시도하십시오.');
-        }
+        alert('성공적으로 회원가입 완료되었습니다.');
     }
 
     //supabase insert 후 session 에 담기
     const setSession = (data)=>{
-        sessionStorage.setItem('signupEmail', data.email);
+        localStorage.setItem('userEmail', data.email);
 
-        const signupEmail = sessionStorage.getItem('signupEmail');
+        const signupEmail = localStorage.getItem('userEmail');
         setUserSession(signupEmail);
     }
     
@@ -101,18 +85,7 @@ const Signup = ({children}) => {
                                             ,message: '이메일 형식을 확인하세요.'}
                             })}
                         />
-                        
                         {errors.email && <span className='err'>{ errors.email.message }</span>}
-                        <input 
-                            className='input_row' 
-                            type='text' 
-                            name='name' 
-                            placeholder='name'
-                            {...register('name', {
-                                required: '이름은 필수입니다.'
-                            })}
-                        />
-                        {errors.name && <span className='err'>{ errors.name.message }</span>}
                         
                         <input 
                             className='input_row' 
@@ -121,7 +94,7 @@ const Signup = ({children}) => {
                             placeholder='password'
                             {...register('password', {
                                 required: '비밀번호는 필수입니다.'
-                                ,minLength: {value: 5, message: '5자리 이상의 비밀번호를 입력하세요.'}
+                                ,minLength: {value: 6, message: '6자리 이상의 비밀번호를 입력하세요.'}
                                 ,maxLength: {value: 20, message: '20자 이내의 비밀번호를 입력하세요.'}
                             })}
                         />
@@ -134,7 +107,7 @@ const Signup = ({children}) => {
                             placeholder='correct your password'
                             {...register('passwordCheck', {
                                 required: '비밀번호는 필수입니다.'
-                                ,minLength: {value: 5, message: '5자리 이상의 비밀번호를 입력하세요.'}
+                                ,minLength: {value: 6, message: '6자리 이상의 비밀번호를 입력하세요.'}
                                 ,maxLength: {value: 20, message: '20자 이내의 비밀번호를 입력하세요.'}
                                 ,validate: {checkPassword: (val) => {
                                     const { password } = getValues();
