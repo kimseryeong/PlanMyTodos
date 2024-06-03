@@ -44,7 +44,7 @@ button:hover{
     align-items: center;
 }
 
-.btn-contents button, .btn{
+.btn-contents button, .btns{
     width: 80px;
     height: 35px;
     font-size: 15px;
@@ -96,7 +96,7 @@ button:hover{
 }
 
 .backColor{
-    background-color: bisque;
+    background-color: #EAF2F8;
 }
 
 .err{

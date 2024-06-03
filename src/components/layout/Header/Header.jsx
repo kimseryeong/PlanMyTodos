@@ -24,7 +24,7 @@ const Header = () => {
 
     return (
         <header className='header'>
-            <p className='logo'>ToDoList</p>
+            {/* <p className='logo'>ToDoList</p> */}
             <div className='btn-contents'>
                 {userSession ? 
                 <>

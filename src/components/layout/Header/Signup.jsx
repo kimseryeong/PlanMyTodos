@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
 const style = {
-    overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",}
+    overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
     ,content: {
         textAlign: 'center'
         ,width: '400px'
@@ -118,8 +118,8 @@ const Signup = ({children}) => {
                         {errors.passwordCheck && <span className='err'>{ errors.passwordCheck.message }</span>}
                     </div>
                     <div className='btn-wrap wrap'>
-                        <button className='btn' onClick={closeSignup}>cancel</button>
-                        <button className='btn backColor' type='submit'>{ children }</button>
+                        <button className='btns' onClick={closeSignup}>cancel</button>
+                        <button className='btns backColor' type='submit'>{ children }</button>
                     </div>
                 </div>
             </form>
