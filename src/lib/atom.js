@@ -5,4 +5,9 @@ const globalState = atom({
     ,default: null
 })
 
-export { globalState };
+const dateState = atom({
+    key: 'clickDateState'
+    ,default: null
+})
+
+export { globalState, dateState };
