@@ -2,42 +2,43 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interaction from '@fullcalendar/interaction';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { dateState } from '../../../lib/atom';
+import { dateState, calDate } from '../../../lib/atom';
 import { FullCalendarContainer } from './FullCalendarContainer'
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';  //boot5
 
 const events = [
-    {title: 'event1', start: new Date()},
-    {
-        id:'event2',
-        title: 'event2',
-        start: '2024-06-02', 
-        end: '2024-06-04', 
-        backgroundColor: '#A9CCE3', 
+    // {title: 'event1', start: new Date()},
+    // {
+    //     id:'event2',
+    //     title: 'event2',
+    //     start: '2024-06-02', 
+    //     end: '2024-06-04', 
+    //     backgroundColor: '#A9CCE3', 
 
-    },
-    {title: 'event10', start: '2024-06-02', end: '2024-06-07', backgroundColor: '#A9CCE3'},
-    {title: 'event3', start: '2024-06-07', backgroundColor: '#A9CCE3'},
+    // },
+    // {title: 'event10', start: '2024-06-02', end: '2024-06-07', backgroundColor: '#A9CCE3'},
+    // {title: 'event3', start: '2024-06-07', backgroundColor: '#A9CCE3'},
 ]
 
 export default function Calendar () {
-    
-    const renderTodo = (date) => {
-        console.log(`날짜에 맞는 todo 렌더링하기`, date);
-    
+
+    //날짜 상태관리
+    const setDate = useSetRecoilState(dateState);
+    const onClickDate = (date) => {
+        console.log(`calendar 날짜 클릭: ${date}`);
+        
+        const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         
-        const click = `${month}.${day}`;
-    
-        setClickDate(click);
+        const fullDate = `${year}-${month}-${day}`;
+        setDate(fullDate);
     }
-    const [clickDate, setClickDate] = useRecoilState(dateState);
-
+    
     return (
         <>
             <FullCalendarContainer>
@@ -60,10 +61,9 @@ export default function Calendar () {
                     //     console.log(e.srcElement.classList);
                     //     console.log(this);
                     // }}
-                    dateClick={(arg) => renderTodo(arg.date)}
+                    dateClick={(arg) => onClickDate(arg.date)}
                     eventClick={(info) => console.log('클릭',info.event._def)} //이벤트 클릭
                 />
-                
             </FullCalendarContainer>
         </>
     );

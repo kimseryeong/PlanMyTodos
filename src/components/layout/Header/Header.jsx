@@ -1,34 +1,39 @@
 import './Header.css';
 import Login from './Login';
 import Signup from './Signup';
-import { globalState } from '../../../lib/atom';
+import { globalState, globalUuid } from '../../../lib/atom';
 import { supabase } from '../../../lib/supabaseClient';
 
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 const Header = () => {
 
-    const [userSession, setUserSession] = useRecoilState(globalState);
-    // console.log('Header에서 userSession: ', userSession);
+    const userEmail = useRecoilValue(globalState);
+    const userUuid = useRecoilValue(globalUuid);
+
+    console.log('Header: ', userEmail);
+    console.log(userUuid);
 
     //logout
     const onLogout = async () => {
         const { error } = await supabase.auth.signOut();
 
-        localStorage.removeItem('userEmail');
-        setUserSession(null);
+        // localStorage.removeItem('userEmail');
+        // setUserEmail(null);
 
-        alert('로그아웃 되었습니다.');
         if(error) console.log('error: ', error);
+        alert('로그아웃 되었습니다.');
     }
+
 
     return (
         <header className='header'>
-            {/* <p className='logo'>ToDoList</p> */}
+            {/* <span className='logo'>ToDoList</span> */}
             <div className='btn-contents'>
-                {userSession ? 
+                {userEmail ? 
                 <>
-                    <span className='userEmail backColor'>{ userSession }</span>
+                    <span className='userEmail backColor'>{ userEmail }</span>
                     <button onClick={onLogout}>Logout</button>
                 </>
                 :

@@ -10,6 +10,9 @@ const FullCalendarContainer = styled.div`
         width: 100%;
     }
 
+    .fc-dayGridMonth-view.fc-view.fc-daygrid{
+        border-left: 1px solid #ddd;
+    }
     .fc-theme-bootstrap5,
     .fc-theme-bootstrap5,
     .fc-scrollgrid{

@@ -13,7 +13,7 @@ body{
     font-family: var(--font) ;
 }
 
-button:hover{
+.btns:hover{
     box-shadow: 1px 1px 1px #ddd;
     cursor: pointer;
     /* box-shadow: 1px 1px 1px #aba9a9; */
@@ -34,6 +34,7 @@ button:hover{
     padding-left: var(--size);
     font-weight: 600;
     font-size: 30px;
+    color: #A9CCE3;
 }
 
 /* login & SignIn Button */

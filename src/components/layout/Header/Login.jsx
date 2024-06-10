@@ -1,5 +1,5 @@
 import { supabase } from '../../../lib/supabaseClient';
-import { globalState } from '../../../lib/atom';
+import { globalState, globalUuid } from '../../../lib/atom';
 
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
@@ -38,7 +38,7 @@ const Login = ({children}) => {
             password: inputs.password,
             // options: {data: {name: inputs.name}}
         })
-        console.log(data);
+        // console.log(data);
 
         if(error){
             if(error.status === 400){
@@ -50,40 +50,25 @@ const Login = ({children}) => {
         }
     }
 
-    const onLogin = async (inputs) => {
-        try{
-            const {data, error} = await supabase
-                .from('USER_INFO')
-                .select('email, name')
-                .eq('email', inputs.email)
-                .eq('password', inputs.password)
-
-            console.log('length: ', data.length);
-            
-            if(data.length === 0){
-                alert('일치하는 회원 정보가 없습니다. ');
-                return;
+    const [userUuid, setUserUuid] = useRecoilState(globalUuid);
+    const [userEmail, setUserEmail] = useRecoilState(globalState);
+    useEffect(() => {
+        supabase.auth.getSession().then(({data: {session}}) => {
+            if(session) {
+                setUserUuid(session.user.id);
+                setUserEmail(session.user.email);
             }
-
-
-            setSession(data[0].email);
-            closeLogin();
-        }
-        catch (error){
-            console.log(error);
-            alert('문제가 발생하였습니다. 다시 시도하십시오.');
-        }
-
-    }
-
-    //supabase select 후 session 에 담기
-    const setSession = (data)=>{
-        localStorage.setItem('userEmail', data);
-
-        const loginEmail = localStorage.getItem('userEmail');
-        setUserSession(loginEmail);
-    }
-    const [userSession, setUserSession] = useRecoilState(globalState);
+            
+        })
+        
+        const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
+            if(session) {
+                setUserUuid(session.user.id);
+                setUserEmail(session.user.email);
+            }
+            return () => subscription.unsubscribe();
+        })
+    }, [])
 
     //google login
     const onGoogleLogin = async () => {
@@ -103,27 +88,6 @@ const Login = ({children}) => {
             // console.log('supabase 구글 로그인 에러: ', error);
             return;
         }
-    }
-    
-    //supabase 로그인 세션 정보 가져와서 담기
-    const [oauthSession, setOauthSession] = useState(null);
-
-    useEffect(() => {
-        supabase.auth.getSession().then(({data: {session}}) => {
-            setOauthSession(session);
-        })
-
-        const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
-            setOauthSession(session);
-
-            return () => subscription.unsubscribe();
-        })
-    }, [])
-    
-    if(oauthSession){
-        console.log('세션: ')
-        console.log(oauthSession.user.email);
-        setSession(oauthSession.user.email);
     }
 
 
