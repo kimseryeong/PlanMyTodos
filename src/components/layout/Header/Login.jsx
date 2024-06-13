@@ -1,12 +1,10 @@
 import { supabase } from '../../../lib/supabaseClient';
-import { globalState, globalUuid } from '../../../lib/atom';
 
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { FaUser } from 'react-icons/fa'
 import { GrSecure } from 'react-icons/gr'
-import { useRecoilState } from 'recoil';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -29,16 +27,13 @@ const Login = ({children}) => {
     const closeLogin = () => setLoginOpen(false);
 
     //login form submit
-    const { register, handleSubmit, watch, formState: {errors} } = useForm();
+    const { register, handleSubmit, formState: {errors} } = useForm();
     const onSubmit = async (inputs) => {
-        //onSignup(data);
 
         const {data, error} = await supabase.auth.signInWithPassword({
             email: inputs.email,
             password: inputs.password,
-            // options: {data: {name: inputs.name}}
         })
-        // console.log(data);
 
         if(error){
             if(error.status === 400){
@@ -50,30 +45,9 @@ const Login = ({children}) => {
         }
     }
 
-    const [userUuid, setUserUuid] = useRecoilState(globalUuid);
-    const [userEmail, setUserEmail] = useRecoilState(globalState);
-    useEffect(() => {
-        supabase.auth.getSession().then(({data: {session}}) => {
-            if(session) {
-                setUserUuid(session.user.id);
-                setUserEmail(session.user.email);
-            }
-            
-        })
-        
-        const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
-            if(session) {
-                setUserUuid(session.user.id);
-                setUserEmail(session.user.email);
-            }
-            return () => subscription.unsubscribe();
-        })
-    }, [])
 
     //google login
     const onGoogleLogin = async () => {
-        // console.log('구글 로그인 click');
-
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {

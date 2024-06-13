@@ -1,10 +1,8 @@
 import { supabase } from '../../../lib/supabaseClient';
-import { globalState } from '../../../lib/atom';
 
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -48,17 +46,7 @@ const Signup = ({children}) => {
         }
         alert('성공적으로 회원가입 완료되었습니다.');
     }
-
-    //supabase insert 후 session 에 담기
-    const setSession = (data)=>{
-        localStorage.setItem('userEmail', data.email);
-
-        const signupEmail = localStorage.getItem('userEmail');
-        setUserSession(signupEmail);
-    }
     
-    const [userSession, setUserSession] = useRecoilState(globalState);
-
     return (
         <>
             <button onClick={signupClick}>{children}</button>
