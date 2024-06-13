@@ -1,62 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
-import { globalUuid, dateState } from '../../lib/atom';
-import { supabase } from '../../lib/supabaseClient';
-
 import TodoItem from './TodoItem';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../lib/supabaseClient';
+import { dateState, userState, todoState, todosRender } from '../../lib/atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-const TodoListStyle = styled.div`
-    padding: 0 20px;
-`;
 
-//todolist load
-
-const loadTodoList = async (uuid, date, setDataList, setError) => {
-    if(!uuid){
-        setError('로그인 후 이용 가능합니다.');
-        return;
-    }
+const loadTodoList = async (uuid, date, setTodoList, setError) => {
 
     const {data, error} = await supabase.from('todolist')
-        .select('idx, title, start_date, complete_state')
+        .select('*')
         .eq('id', uuid)
         .eq('start_date', date)
-
-    if(error){
-        alert('문제가 발생했습니다. 다시 시도하세요.');
-        setError('데이터 로드 중 문제가 발생했습니다.');
+    
+    if(error) {
+        alert('[ TodoList > loadTodoList ] 문제가 발생했습니다.');
+        setError('[ TodoList > loadTodoList ] 데이터 로드 중 문제가 발생했습니다.');
+        console.log(error);
         return;
     }
     else{
-        setDataList(data);
+        // console.log('[ TodoList > loadTodoList ] 조회성공 >> ');
+        setTodoList(data); //recoil
     }
+
 }
 
-export default function TodoList () {
-    const userId = useRecoilValue(globalUuid);
-    const date = useRecoilValue(dateState);  
-    const [dataList, setDataList] = useState([]);
+export default function TodoList (){
+    const userInfo = useRecoilValue(userState);
+    const uuid = userInfo ? userInfo.user.id : null;
+    const date = useRecoilValue(dateState);
+    const [todoList, setTodoList] = useRecoilState(todoState)
     const [error, setError] = useState(null);
-
+    
     useEffect(()=>{
-        loadTodoList(userId, date, setDataList, setError);
-    }, [userId, date, dataList]);
+        if(!userInfo) return;
+        loadTodoList(uuid, date, setDataList, setTodoList, setError);
+    }, [uuid, date])
+    
+    const currTodos = useRecoilValue(todosRender);
 
-    if(error){
-        // return <div>{error}</div>;
-        // console.log(error);
+    if (error) {
+        return <div>{error}</div>;
     }
 
-    
-
     return (
-        <TodoListStyle>
+        <>
             {
-                dataList.length > 0
-                ? dataList.map((v, i) => <TodoItem idx={v.idx} title={v.title} done={v.complete_state} />)
-                : <div>할 일이 없습니다.</div>
+                currTodos && currTodos.map((v, i) => <TodoItem key={i} title={v.title} idx={v.idx} done={v.complete_state}/>)
             }
-        </TodoListStyle>
+        </>
     );
 }

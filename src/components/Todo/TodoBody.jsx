@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import TodoList from './TodoList';
 import TodoCreate from './TodoCreate';
 
-
-
 const TodoBodyStyle = styled.div`
     flex: 1;
     padding: 20px;

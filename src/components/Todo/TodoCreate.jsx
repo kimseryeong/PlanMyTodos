@@ -4,9 +4,10 @@ import styled, { css } from 'styled-components';
 import { MdAdd, MdCancel } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 
+import { onCreateTodo } from '../../API';
 import { supabase } from '../../lib/supabaseClient';
-import { globalUuid, dateState } from '../../lib/atom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { userState, dateState, todoState, errorState } from '../../lib/atom';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 
 const CreateItem = styled.div`
@@ -19,17 +20,6 @@ const CreateItem = styled.div`
         cursor: pointer;
         font-weight: 700;
     }
-    // ${props => props.open && css`
-    //     background: #ff6b6b;
-    //     &:hover{ 
-    //         background: #ff8787; 
-    //     }
-    //     &:active{ 
-    //         background: fa5252;
-    //     }
-    //     display: none;
-    // `}
-        
 `;
 
 const Input = styled.input`
@@ -79,31 +69,29 @@ const ModalBody = styled.div`
 `;
 
 export default function TodoCreate(){
-    const userUuid = useRecoilValue(globalUuid);
+    
+    const userInfo = useRecoilValue(userState);
+    const uuid = userInfo ? userInfo.user.id : null;
     const date = useRecoilValue(dateState);
+    const setTodoList = useSetRecoilState(todoState);
+    const setError = useSetRecoilState(errorState);
+    
+    const [todo, setTodo] = useState(''); //사용자 입력 todo
     
     const [isOpen, setIsOpen] = useState(false);
-    const [todo, setTodo] = useState(null);
-
     const onModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
 
     const onCreate = async () => {
+        console.log('onCreate');
 
-        const { data, error } = await supabase
-            .from('todolist')
-            .insert([
-                { id: userUuid, title: todo,  start_date: date, complete_state: 'N'},
-            ])
-        
-        if(error) console.log(error);
-        
-        closeModal();
+        const data = await onCreateTodo(uuid, date, todo, setError, closeModal);
+        setTodoList((prev) => [...prev, data]);
     }
 
     return (
         <>
-            {userUuid ? 
+            {userInfo ? 
             <CreateItem onClick={onModal} ><MdAdd />할 일 추가</CreateItem> 
             : <div>로그인 후 이용 가능합니다.</div>
             }

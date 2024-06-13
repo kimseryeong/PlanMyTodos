@@ -2,9 +2,11 @@ import styled, { css } from 'styled-components';
 import { MdCheck, MdDelete } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillEdit } from "react-icons/ai";
-import { supabase } from '../../lib/supabaseClient';
 import Modal from 'react-modal';
 import { useState } from 'react';
+import { todoState, userState } from '../../lib/atom'
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { onUpdateTodo, onDeleteTodo, onChangeCheck } from '../../API';
 
 const Hover = styled.div`
     display: flex;
@@ -12,7 +14,8 @@ const Hover = styled.div`
     justify-content: center;
     cursor: pointer;
     color: #ced4da;
-    font-size: 20px;
+    font-size: 17px;
+    
 
 `;
 const RemoveBlock = styled.button`
@@ -34,9 +37,11 @@ const UpdateBlock = styled.div`
 const TodoItemStyle = styled.div`
     display: flex;
     align-items: center;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding: 12px;
     &:hover {
+        border: 1px solid #efefef;
+        border-radius: 16px;
+
         ${RemoveBlock} {
             display: initial;
         }
@@ -61,14 +66,16 @@ const CheckBlock = styled.div`
     ${props => props.done && css`
         border: 1px solid #7FB3D5;
         color: #7FB3D5;
-        text-decoration: line-line-through;
     `}
 `;
 const Text = styled.div`
     flex: 1;
-    font-size: 20px;
+    font-size: 17px;
     color: #495057;
-    ${props => props.done && css`color: #ced4da;`}
+    ${props => props.done && css`
+        color: #ced4da;
+        text-decoration-line: line-through;
+    `}
 `;
 const ModalHead = styled.div`
     display: flex;
@@ -116,58 +123,60 @@ const style = {
 }
 
 export default function TodoItem ({done, title, idx}) {
-    
-    const completeState = done === 'N' ? false : true;
-
-    const onDelete = async (e) => {
-        console.log(idx);
-
-        const { error } = await supabase
-            .from('todolist')
-            .delete()
-            .eq('idx', idx)
-
-        if(error) console.log(error);
-    }
-
+    const setTodoList = useSetRecoilState(todoState);
+    const userInfo = useRecoilValue(userState);
+    const uuid = userInfo ? userInfo.user.id : null;
+    const [newTodo, setNewTodo] = useState('');
     const [isOpen, setIsOpen] = useState(false);
+    const onModal = () => setIsOpen(true);
+    const onClose = () => setIsOpen(false);
 
-    const onUpdateModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
-    const [todo, setTodo] = useState(title);
 
+    //수정
     const onUpdate = async () => {
-        console.log(todo);
+        console.log('onUpdate');
 
-        const { data, error } = await supabase
-            .from('todolist')
-            .update({ title: todo })
-            .eq('idx', idx)
-            .select()
-
-        if(error) console.log(error); 
-        closeModal(); 
-
+        const data = await onUpdateTodo(uuid, idx, newTodo, onClose);
+        setTodoList((prev) => prev.map(t => t.idx === data.idx ? data : t));
     }
+
+    //삭제
+    const onDelete = async () => {
+        console.log('onDelete');
+
+        await onDeleteTodo(uuid, idx);
+        setTodoList((prev) => prev.filter(t => t.idx !== idx));
+    }
+
+    //완료체크
+    const onCheck = async () => {
+        console.log('현재완료상태: ', done);
+
+        const data = await onChangeCheck(idx, !done);
+        console.log(data);
+        setTodoList((prev)=> prev.map(t => t.idx === data.idx ? data : t));
+    }
+
+
     return (
         <TodoItemStyle>
-            <CheckBlock done={completeState}>{completeState && <MdCheck/>}</CheckBlock>
-            <Text done={completeState}>{title}</Text>
+            <CheckBlock done={done} onClick={onCheck}>{done && <MdCheck/>}</CheckBlock>
+            <Text done={done}>{title}</Text>
             <Hover>
-                <UpdateBlock onClick={onUpdateModal}><AiFillEdit/></UpdateBlock>
+                <UpdateBlock onClick={onModal}><AiFillEdit/></UpdateBlock>
                 <RemoveBlock onClick={onDelete}><MdDelete /></RemoveBlock>
             </Hover>
             <Modal
                 isOpen={isOpen}
-                onRequestClose={closeModal}
+                onRequestClose={onClose}
                 style={style}
             >
-                <ModalHead onClick={closeModal} >
+                <ModalHead onClick={onClose} >
                     <span>할 일 수정</span>
                     <IoCloseOutline className='icon'/>
                 </ModalHead>
                 <ModalBody>
-                    <Input autoFocus onChange={(e) => setTodo(e.target.value)} placeholder={title}/>
+                    <Input autoFocus onChange={(e) => setNewTodo(e.target.value)} placeholder={title}/>
                     <button className='btns backColor' onClick={onUpdate}>수정</button>
                 </ModalBody>
             </Modal>

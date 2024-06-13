@@ -9,10 +9,7 @@ const TodoTemplateStyle = styled.div`
     height: 100%
 `;
 
-
 export default function TodoTemplate () {
-    
-
     return (
         <TodoTemplateStyle>
             <TodoHead />
