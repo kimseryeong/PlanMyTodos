@@ -8,6 +8,7 @@ const FullCalendarContainer = styled.div`
 
     .fc {
         width: 100%;
+        font-size: 12px
     }
 
     .fc-dayGridMonth-view.fc-view.fc-daygrid{
@@ -102,7 +103,6 @@ const FullCalendarContainer = styled.div`
         margin-bottom: 5px;
         border-radius: 4px;
         font-weight: 500;
-        font-size: 12px;
     }
     
     // 각 이벤트 블럭 요소
@@ -111,7 +111,7 @@ const FullCalendarContainer = styled.div`
         border: none;
     }
     .fc-event-main {
-        font-size: 14px;
+        font-size: 12px;
         color: #154360;
     }
     

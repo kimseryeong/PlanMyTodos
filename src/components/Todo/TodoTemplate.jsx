@@ -9,11 +9,11 @@ const TodoTemplateStyle = styled.div`
     height: 100%
 `;
 
-export default function TodoTemplate () {
+export default function TodoTemplate ({uuid}) {
     return (
         <TodoTemplateStyle>
             <TodoHead />
-            <TodoBody />
+            <TodoBody uuid={uuid}/>
         </TodoTemplateStyle>
     );
 }

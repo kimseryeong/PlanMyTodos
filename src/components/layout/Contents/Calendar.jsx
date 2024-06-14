@@ -19,8 +19,6 @@ export default function Calendar () {
     const [error, setError] = useState(null);
     const [todoList, setTodoList] = useRecoilState(todoState);
     const calEvent = useRecoilValue(calendarEvents);
-    // console.log('calEvent');
-    // console.log(calEvent);
 
     
     

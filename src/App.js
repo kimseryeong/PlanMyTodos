@@ -3,6 +3,7 @@ import { RecoilRoot, RecoilEnv } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
+
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
     <>
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
+          
           <Layout/>
       </RecoilRoot>
     </QueryClientProvider>

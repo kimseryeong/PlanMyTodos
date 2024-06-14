@@ -1,10 +1,14 @@
 import { ClipLoader } from 'react-spinners';
+import styled from 'styled-components';
 
-export const Loading = () => {
+const LoadingStyle = styled.div`
+    text-align: center;
+`;
+
+export default function Loading ({loading}) {
     return (
-        <div>
-            <h4>잠시만 기다려주세요 !</h4>
-            <ClipLoader/>
-        </div>
+        <LoadingStyle>
+            <ClipLoader color={"#ddd"} loading={loading} size={50} />
+        </LoadingStyle>
     )
 }

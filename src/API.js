@@ -1,7 +1,7 @@
 import { supabase } from "./lib/supabaseClient";
 
 //todo 등록하기
-export const onCreateTodo = async (uuid, date, newTodo, closeModal, setError) => {
+export const onCreateTodo = async (uuid, date, newTodo, setError) => {
     const {data, error} = await supabase
         .from('todolist')
         .insert([
@@ -21,14 +21,11 @@ export const onCreateTodo = async (uuid, date, newTodo, closeModal, setError) =>
     }
     
     
-    //모달 close
-    closeModal();
-
     return data[0];
 }
 
 //todo 수정하기
-export const onUpdateTodo = async (uuid, idx, todo, closeModal) => {
+export const onUpdateTodo = async (uuid, idx, todo) => {
     const { data, error } = await supabase
         .from('todolist')
         .update({ title: todo })
@@ -41,8 +38,6 @@ export const onUpdateTodo = async (uuid, idx, todo, closeModal) => {
         console.log('todo 수정 성공');
         console.log(data);
     }
-
-    closeModal();
 
     return data[0];
 }
@@ -76,4 +71,26 @@ export const onChangeCheck = async (idx, chkState) => {
     if(error) console.log(error);
     
     return data[0];
+}
+
+export const fetchAllTodos = async (uuid) => {
+    if(!uuid) {
+        alert('fetch 불가 uuid 없음')
+        return [];
+    }
+
+    try{
+        let {data, error} = await supabase
+            .from('todolist')
+            .select('idx, title, complete_state, start_date')
+            .eq('id', uuid)
+        if(error){
+            throw error;
+        }
+        return data;
+    }
+    catch(error){
+        console.log('fetching todos Error!!! ', error.message);
+        return [];
+    }
 }

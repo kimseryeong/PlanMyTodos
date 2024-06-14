@@ -2,10 +2,12 @@ import styled, { css } from 'styled-components';
 import { MdCheck, MdDelete } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillEdit } from "react-icons/ai";
+
+import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { useState } from 'react';
-import { todoState, userState } from '../../lib/atom'
-import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilValue, useRecoilState } from 'recoil';
+
+import { todoState, loadingState } from '../../lib/atom'
 import { onUpdateTodo, onDeleteTodo, onChangeCheck } from '../../API';
 
 const Hover = styled.div`
@@ -50,7 +52,6 @@ const TodoItemStyle = styled.div`
         }
     }
 `;
-
 
 const CheckBlock = styled.div`
     width: 25px;
@@ -100,12 +101,12 @@ const ModalBody = styled.div`
     }
 `;
 const Input = styled.input`
-  padding: 12px;
-  width: 100%;
-  outline: none;
-  font-size: 16px;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
+    padding: 12px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
 `;
 
 const style = {
@@ -122,39 +123,50 @@ const style = {
     }
 }
 
-export default function TodoItem ({done, title, idx}) {
+function TodoItem ({title, idx, done, uuid}) {
     const setTodoList = useSetRecoilState(todoState);
-    const userInfo = useRecoilValue(userState);
-    const uuid = userInfo ? userInfo.user.id : null;
+    // const userInfo = useRecoilValue(userState);
+    // const uuid = userInfo ? userInfo.user.id : null;
     const [newTodo, setNewTodo] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const onModal = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
+    const [loading, setLoading] = useRecoilState(loadingState);
 
 
     //수정
     const onUpdate = async () => {
         console.log('onUpdate');
+        setLoading(true);
 
-        const data = await onUpdateTodo(uuid, idx, newTodo, onClose);
+        const data = await onUpdateTodo(uuid, idx, newTodo);
+        onClose();
+
         setTodoList((prev) => prev.map(t => t.idx === data.idx ? data : t));
+        setLoading(false);
     }
 
     //삭제
     const onDelete = async () => {
+        setLoading(true);
         console.log('onDelete');
 
         await onDeleteTodo(uuid, idx);
         setTodoList((prev) => prev.filter(t => t.idx !== idx));
+
+        setLoading(false);
     }
 
     //완료체크
     const onCheck = async () => {
         console.log('현재완료상태: ', done);
+        setLoading(true);
 
         const data = await onChangeCheck(idx, !done);
         console.log(data);
         setTodoList((prev)=> prev.map(t => t.idx === data.idx ? data : t));
+        
+        setLoading(false);
     }
 
 
@@ -180,6 +192,10 @@ export default function TodoItem ({done, title, idx}) {
                     <button className='btns backColor' onClick={onUpdate}>수정</button>
                 </ModalBody>
             </Modal>
+
+            
         </TodoItemStyle>
     );
 }
+
+export default React.memo(TodoItem);

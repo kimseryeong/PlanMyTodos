@@ -1,14 +1,16 @@
 import TodoItem from './TodoItem';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { dateState, userState, todoState, todosRender } from '../../lib/atom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { dateState, userState, todoState, todosRender, loadingState } from '../../lib/atom';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 
-const loadTodoList = async (uuid, date, setTodoList, setError) => {
+const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
+
+    setLoading(true);
 
     const {data, error} = await supabase.from('todolist')
-        .select('*')
+        .select('idx, title, start_date, complete_state')
         .eq('id', uuid)
         .eq('start_date', date)
     
@@ -19,25 +21,29 @@ const loadTodoList = async (uuid, date, setTodoList, setError) => {
         return;
     }
     else{
-        // console.log('[ TodoList > loadTodoList ] 조회성공 >> ');
+        console.log('[ TodoList > loadTodoList ]');
+        console.log(data);
         setTodoList(data); //recoil
     }
+    
+    setLoading(false);
 
 }
 
-export default function TodoList (){
-    const userInfo = useRecoilValue(userState);
-    const uuid = userInfo ? userInfo.user.id : null;
-    const date = useRecoilValue(dateState);
-    const [todoList, setTodoList] = useRecoilState(todoState)
+function TodoList ({uuid, date}){
+    // const userInfo = useRecoilValue(userState);
+    // const uuid = userInfo ? userInfo.user.id : null;
+    // const date = useRecoilValue(dateState);
+    const [todoList, setTodoList] = useRecoilState(todoState);
     const [error, setError] = useState(null);
+    const setLoading = useSetRecoilState(loadingState);
     
     useEffect(()=>{
-        if(!userInfo) return;
-        loadTodoList(uuid, date, setDataList, setTodoList, setError);
+        if(!uuid) return;
+        loadTodoList(uuid, date, setTodoList, setLoading, setError);
     }, [uuid, date])
-    
-    const currTodos = useRecoilValue(todosRender);
+
+    // const currTodos = useRecoilValue(todosRender);
 
     if (error) {
         return <div>{error}</div>;
@@ -46,8 +52,15 @@ export default function TodoList (){
     return (
         <>
             {
-                currTodos && currTodos.map((v, i) => <TodoItem key={i} title={v.title} idx={v.idx} done={v.complete_state}/>)
+                todoList && todoList.map((v, i) => <TodoItem key={i} 
+                    title={v.title} 
+                    idx={v.idx} 
+                    done={v.complete_state} 
+                    uuid={uuid}/>
+                )
             }
         </>
     );
 }
+
+export default React.memo(TodoList);

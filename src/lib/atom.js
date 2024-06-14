@@ -1,4 +1,5 @@
 import { atom, selector } from 'recoil';
+import { supabase } from './supabaseClient';
 
 //사용자 상태관리
 export const userState = atom({
@@ -28,6 +29,12 @@ export const todosRender = selector({
     }
 }) 
 
+//모든 날짜 todolist 상태관리
+export const allTodosState = atom({
+    key: 'fetchAllTodos',
+    default: []
+})
+
 //캘린더 이벤트
 export const calendarEvents = selector({
     key: 'calendarEvents',
@@ -35,7 +42,7 @@ export const calendarEvents = selector({
         const userInfo = get(userState);
         if(!userInfo) return;
 
-        const data = get(todoState);
+        const data = get(allTodosState);
         const events = data
             .filter((v) => v.complete_state === true)
             .map((v) => {
@@ -55,4 +62,9 @@ export const calendarEvents = selector({
 export const errorState = atom({
     key: 'errorState',
     default: null
+})
+
+export const loadingState = atom({
+    key: 'loadingState',
+    default: false
 })
