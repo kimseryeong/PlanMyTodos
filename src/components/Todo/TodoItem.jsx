@@ -136,7 +136,7 @@ function TodoItem ({title, idx, done, uuid}) {
 
     //수정
     const onUpdate = async () => {
-        console.log('onUpdate');
+        // console.log('onUpdate');
         setLoading(true);
 
         const data = await onUpdateTodo(uuid, idx, newTodo);
@@ -149,7 +149,7 @@ function TodoItem ({title, idx, done, uuid}) {
     //삭제
     const onDelete = async () => {
         setLoading(true);
-        console.log('onDelete');
+        // console.log('onDelete');
 
         await onDeleteTodo(uuid, idx);
         setTodoList((prev) => prev.filter(t => t.idx !== idx));
@@ -159,11 +159,11 @@ function TodoItem ({title, idx, done, uuid}) {
 
     //완료체크
     const onCheck = async () => {
-        console.log('현재완료상태: ', done);
+        // console.log('현재완료상태: ', done);
         setLoading(true);
 
         const data = await onChangeCheck(idx, !done);
-        console.log(data);
+        // console.log(data);
         setTodoList((prev)=> prev.map(t => t.idx === data.idx ? data : t));
         
         setLoading(false);

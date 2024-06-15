@@ -21,8 +21,8 @@ const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
         return;
     }
     else{
-        console.log('[ TodoList > loadTodoList ]');
-        console.log(data);
+        // console.log('[ TodoList > loadTodoList ]');
+        // console.log(data);
         setTodoList(data); //recoil
     }
     

@@ -87,7 +87,7 @@ export default function TodoCreate({uuid, date}){
     const onCreate = async () => {
         setLoading(true);
         
-        console.log('onCreate');
+        // console.log('onCreate');
         
         closeModal();
         

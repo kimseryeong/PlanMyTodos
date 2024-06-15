@@ -54,6 +54,10 @@ export const calendarEvents = selector({
                     fontSize: '12px'
                 }
             });
+
+        // console.log('calendarEvents');
+        // console.log(data);
+        // console.log(events);
         return events;
     }
 })
