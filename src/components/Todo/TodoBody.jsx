@@ -11,7 +11,7 @@ const TodoBodyStyle = styled.div`
     padding: 20px;
     padding-bottom: 48px;
     overflow-y: auto;
-    border: 1px solid #7FB3D5;
+    // border: 1px solid #7FB3D5;
 `;
 
 export default function TodoBody({uuid}){

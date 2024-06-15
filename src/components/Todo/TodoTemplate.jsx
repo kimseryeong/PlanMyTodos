@@ -6,7 +6,8 @@ const TodoTemplateStyle = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%
+    height: 100%;
+    width: 40%;
 `;
 
 export default function TodoTemplate ({uuid}) {

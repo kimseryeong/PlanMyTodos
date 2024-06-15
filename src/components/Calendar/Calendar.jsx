@@ -4,13 +4,19 @@ import interaction from '@fullcalendar/interaction';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { dateState, userState, todoState, calendarEvents } from '../../../lib/atom';
-import { FullCalendarContainer } from './FullCalendarContainer'
+import { dateState, userState, todoState, calendarEvents } from '../../lib/atom';
+import { FullCalendarStyle } from './FullcalendarStyle'
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';  //boot5
 import { useEffect, useState} from 'react';
+import styled from 'styled-components';
 
+const CalendarStyle = styled.div`
+    height: 100%;
+    width: 60%;
+    padding: 5px;
+`;
 
 export default function Calendar () {
     const userInfo = useRecoilValue(userState);
@@ -23,8 +29,6 @@ export default function Calendar () {
     
     
     //날짜 상태관리
-    
-
     const onClickDate = (date) => {
         console.log('onClickDate')
         const year = date.getFullYear();
@@ -38,23 +42,23 @@ export default function Calendar () {
     }
     
     return (
-        <>
-            <FullCalendarContainer>
-                <FullCalendar 
-                    plugins={[dayGridPlugin, interaction, bootstrap5Plugin ]}
-                    initialView='dayGridMonth'
-                    events={calEvent}
-                    viewHeight={300}
-                    themeSystem='bootstrap5'
-                    headerToolbar={{
-                        start: 'title',
-                        center: '',
-                        end: 'prev today next'
-                    }}
-                    dateClick={(arg) => onClickDate(arg.date)}
-                    eventClick={(info) => console.log('이벤트클릭',info.event._def)} //이벤트 클릭
-                />
-            </FullCalendarContainer>
-        </>
+        <CalendarStyle>
+        <FullCalendarStyle>
+            <FullCalendar 
+                plugins={[dayGridPlugin, interaction, bootstrap5Plugin ]}
+                initialView='dayGridMonth'
+                events={calEvent}
+                viewHeight={300}
+                themeSystem='bootstrap5'
+                headerToolbar={{
+                    start: 'title',
+                    center: '',
+                    end: 'prev today next'
+                }}
+                dateClick={(arg) => onClickDate(arg.date)}
+                eventClick={(info) => console.log('이벤트클릭',info.event._def)} //이벤트 클릭
+            />
+        </FullCalendarStyle>
+        </CalendarStyle>
     );
 }

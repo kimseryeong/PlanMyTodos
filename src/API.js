@@ -73,9 +73,10 @@ export const onChangeCheck = async (idx, chkState) => {
     return data[0];
 }
 
+//사용자 모든 todolist 조회
 export const fetchAllTodos = async (uuid) => {
     if(!uuid) {
-        alert('fetch 불가 uuid 없음')
+        console.log('로그인 후 이용하세요.');
         return [];
     }
 

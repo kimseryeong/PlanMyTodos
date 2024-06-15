@@ -1,7 +1,6 @@
-import Layout from './components/layout/Layout';
+import Header from './components/Header';
+import Contents from './components/Contents';
 import { RecoilRoot, RecoilEnv } from 'recoil';
-import { QueryClient, QueryClientProvider } from 'react-query';
-const queryClient = new QueryClient();
 
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
@@ -9,14 +8,12 @@ RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 const App = () => {
 
   return (
-    <>
-    <QueryClientProvider client={queryClient}>
+    <div className='App'>
       <RecoilRoot>
-          
-          <Layout/>
+          <Header/>
+          <Contents/>
       </RecoilRoot>
-    </QueryClientProvider>
-    </>
+    </div>
   );
 
 }

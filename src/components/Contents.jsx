@@ -1,12 +1,17 @@
 import './Contents.css';
-import Calendar from './Calendar';
-import TodoTemplate from '../../Todo/TodoTemplate';
+import Calendar from './Calendar/Calendar';
+import TodoTemplate from './Todo/TodoTemplate';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { userState, allTodosState } from '../../../lib/atom';
-import { fetchAllTodos } from '../../../API';
+import { userState, allTodosState } from '../lib/atom';
+import { fetchAllTodos } from '../API';
 import { useEffect } from 'react';
+import styled from 'styled-components';
 
-
+const ContentsStyle = styled.div`
+    height: 100vh;
+    display: flex;
+    padding-top: 60px;
+`;
 
 export default function Contents () {
 
@@ -19,8 +24,6 @@ export default function Contents () {
         const loadAllTodos = async () => {
             const fetchedTodos = await fetchAllTodos(uuid);
             setAllTodos(fetchedTodos);
-            console.log('fetchedTodos');
-            console.log(fetchedTodos);
         }
 
         loadAllTodos();
@@ -28,14 +31,10 @@ export default function Contents () {
 
 
     return (
-        <main className='contents'>
-            <div className='left'>
-                <TodoTemplate uuid={uuid}/>
-            </div>
-            <div className='right'>
-                <Calendar />
-            </div>
-        </main>
+        <ContentsStyle>
+            <Calendar />
+            <TodoTemplate uuid={uuid}/>
+        </ContentsStyle>
     );
 }
 

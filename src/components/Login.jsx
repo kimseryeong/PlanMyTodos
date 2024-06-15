@@ -1,4 +1,4 @@
-import { supabase } from '../../../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';

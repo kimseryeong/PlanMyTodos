@@ -1,8 +1,8 @@
 import './Header.css';
 import Login from './Login';
 import Signup from './Signup';
-import { userState } from '../../../lib/atom';
-import { supabase } from '../../../lib/supabaseClient';
+import { userState } from '../lib/atom';
+import { supabase } from '../lib/supabaseClient';
 
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
