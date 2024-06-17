@@ -53,4 +53,21 @@ export const FullCalendarStyle = styled.div`
     .fc-event-title{
         color: black;
     }
+
+    //클릭한 날짜 배경색
+    .fc-highlight {
+        background: #EAF2F8 !important;
+    }
+
+    //오늘 날짜 배경 & 글씨
+    .fc .fc-daygrid-day.fc-day-today{
+        
+        background-color: #fff;
+    }
+    .fc .fc-daygrid-day.fc-day-today a{
+        background-color: #A9CCE3;
+        color: red;
+        border-radius: 50%;
+        font-weight: 800;
+    }
 `;
