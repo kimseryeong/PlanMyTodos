@@ -3,7 +3,7 @@ import TodoList from './TodoList';
 import TodoCreate from './TodoCreate';
 import Loading from '../../Loading';
 import { dateState, userState, todoState, todosRender, loadingState } from '../../lib/atom';
-
+import { useUserUuid } from '../../API';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 const TodoBodyStyle = styled.div`
@@ -14,15 +14,14 @@ const TodoBodyStyle = styled.div`
     // border: 1px solid #7FB3D5;
 `;
 
-export default function TodoBody({uuid}){
+export default function TodoBody(){
     
     const loading = useRecoilValue(loadingState);
-    const date = useRecoilValue(dateState);
 
     return (
         <TodoBodyStyle>
-            <TodoList uuid={uuid} date={date}/>
-            <TodoCreate uuid={uuid} date={date}/>
+            <TodoList />
+            <TodoCreate />
             { loading && (
                 <Loading loading={loading}/>
             )}

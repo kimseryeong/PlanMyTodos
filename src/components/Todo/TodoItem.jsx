@@ -139,8 +139,8 @@ function TodoItem ({title, idx, done, uuid}) {
         // console.log('onUpdate');
         setLoading(true);
 
-        const data = await onUpdateTodo(uuid, idx, newTodo);
         onClose();
+        const data = await onUpdateTodo(uuid, idx, newTodo);
 
         setTodoList((prev) => prev.map(t => t.idx === data.idx ? data : t));
         setLoading(false);

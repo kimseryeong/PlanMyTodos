@@ -44,7 +44,7 @@ export const calendarEvents = selector({
 
         const data = get(allTodosState);
         const events = data
-            .filter((v) => v.complete_state === true)
+            // .filter((v) => v.complete_state === true)
             .map((v) => {
                 return {
                     title: `📌${v.title}`,

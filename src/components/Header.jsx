@@ -35,6 +35,8 @@ const Header = () => {
     const onLogout = async () => {
         const { error } = await supabase.auth.signOut();
 
+        setUserInfo(null);
+        
         if(error) console.log('error: ', error);
         alert('로그아웃 되었습니다.');
     }

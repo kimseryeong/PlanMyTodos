@@ -3,8 +3,7 @@ import Modal from 'react-modal';
 import styled, { css } from 'styled-components';
 import { MdAdd, MdCancel } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
-
-import { onCreateTodo } from '../../API';
+import { onCreateTodo,useUserUuid } from '../../API';
 import { supabase } from '../../lib/supabaseClient';
 import { userState, dateState, todoState, errorState } from '../../lib/atom';
 import Loading from '../../Loading';
@@ -24,12 +23,12 @@ const CreateItem = styled.div`
 `;
 
 const Input = styled.input`
-  padding: 12px;
-  width: 100%;
-  outline: none;
-  font-size: 16px;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
+    padding: 12px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
 `;
 
 const style = {
@@ -69,11 +68,9 @@ const ModalBody = styled.div`
     }
 `;
 
-export default function TodoCreate({uuid, date}){
-    
-    // const userInfo = useRecoilValue(userState);
-    // const uuid = userInfo ? userInfo.user.id : null;
-    // const date = useRecoilValue(dateState);
+export default function TodoCreate(){
+    const uuid = useUserUuid();
+    const date = useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
     const setError = useSetRecoilState(errorState);
     const [loading, setLoading] = useState(false);

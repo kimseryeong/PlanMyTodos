@@ -1,4 +1,6 @@
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { supabase } from "./lib/supabaseClient";
+import { userState } from './lib/atom';
 
 //todo 등록하기
 export const onCreateTodo = async (uuid, date, newTodo, setError) => {
@@ -12,7 +14,7 @@ export const onCreateTodo = async (uuid, date, newTodo, setError) => {
                 complete_state: 'N', 
             }
         ])
-        .select()
+        .select('idx, title, complete_state, start_date')
         
     if(error) setError('onCreateTodo 데이터 삽입 중 에러 발생 !!! ');
     else {
@@ -31,7 +33,7 @@ export const onUpdateTodo = async (uuid, idx, todo) => {
         .update({ title: todo })
         .eq('id', uuid)
         .eq('idx', idx)
-        .select()
+        .select('idx, title, complete_state, start_date')
 
     if(error) console.log(error);
     else{
@@ -49,7 +51,7 @@ export const onDeleteTodo = async (uuid, idx) => {
         .delete()
         .eq('id', uuid)
         .eq('idx', idx)
-        .select()
+        .select('idx, title, complete_state, start_date')
 
     if(error) console.log(error);
     else{
@@ -66,7 +68,7 @@ export const onChangeCheck = async (idx, chkState) => {
         .from('todolist')
         .update({complete_state: chkState})
         .eq('idx', idx)
-        .select()
+        .select('idx, title, complete_state, start_date')
 
     if(error) console.log(error);
     
@@ -85,6 +87,7 @@ export const fetchAllTodos = async (uuid) => {
             .from('todolist')
             .select('idx, title, complete_state, start_date')
             .eq('id', uuid)
+            .eq('complete_state', true)
         if(error){
             throw error;
         }
@@ -94,4 +97,11 @@ export const fetchAllTodos = async (uuid) => {
         console.log('fetching todos Error!!! ', error.message);
         return [];
     }
+}
+
+//사용자 uuid return hook
+export const useUserUuid = () => {
+    const userInfo = useRecoilValue(userState);
+    
+    return userInfo ? userInfo.user.id : null;
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import { dateState, userState, todoState, todosRender, loadingState } from '../../lib/atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useUserUuid } from '../../API';
 
 
 const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
@@ -30,10 +31,9 @@ const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
 
 }
 
-function TodoList ({uuid, date}){
-    // const userInfo = useRecoilValue(userState);
-    // const uuid = userInfo ? userInfo.user.id : null;
-    // const date = useRecoilValue(dateState);
+function TodoList (){
+    const uuid = useUserUuid();
+    const date = useRecoilValue(dateState);
     const [todoList, setTodoList] = useRecoilState(todoState);
     const [error, setError] = useState(null);
     const setLoading = useSetRecoilState(loadingState);
