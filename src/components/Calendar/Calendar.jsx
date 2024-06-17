@@ -4,13 +4,14 @@ import interaction from '@fullcalendar/interaction';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { dateState, userState, todoState, calendarEvents } from '../../lib/atom';
+import { dateState, userState, todoState, allTodosState, calendarEvents } from '../../lib/atom';
 import { FullCalendarStyle } from './FullcalendarStyle'
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';  //boot5
 import { useEffect, useState} from 'react';
 import styled from 'styled-components';
+import { fetchAllTodos, useUserUuid } from '../../API';
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -19,13 +20,24 @@ const CalendarStyle = styled.div`
 `;
 
 export default function Calendar () {
-    const userInfo = useRecoilValue(userState);
-    const uuid = userInfo ? userInfo.user.id : null;
+    const uuid = useUserUuid();
     const [date, setDate] = useRecoilState(dateState);
     const [error, setError] = useState(null);
     const [todoList, setTodoList] = useRecoilState(todoState);
-    const calEvent = useRecoilValue(calendarEvents);
+    const [allTodos, setAllTodos] = useRecoilState(allTodosState);
+    const calEvents = useRecoilValue(calendarEvents);
+    
+    useEffect(()=>{
+        const loadAllTodos = async () => {
+            const fetchedTodos = await fetchAllTodos(uuid);
+            setAllTodos(fetchedTodos);
+            console.log(fetchedTodos);
+        }
 
+        loadAllTodos();
+    }, [uuid, setAllTodos])
+
+    
     
     
     //날짜 상태관리
@@ -38,8 +50,10 @@ export default function Calendar () {
         const fullDate = `${year}-${month}-${day}`;
         setDate(fullDate);
 
-        
+        console.log(this);
     }
+
+        
     
     return (
         <CalendarStyle>
@@ -47,7 +61,7 @@ export default function Calendar () {
             <FullCalendar 
                 plugins={[dayGridPlugin, interaction, bootstrap5Plugin ]}
                 initialView='dayGridMonth'
-                events={calEvent}
+                events={calEvents}
                 viewHeight={300}
                 themeSystem='bootstrap5'
                 headerToolbar={{
@@ -57,6 +71,7 @@ export default function Calendar () {
                 }}
                 dateClick={(arg) => onClickDate(arg.date)}
                 eventClick={(info) => console.log('이벤트클릭',info.event._def)} //이벤트 클릭
+                selectable={true}
             />
         </FullCalendarStyle>
         </CalendarStyle>

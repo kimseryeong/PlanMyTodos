@@ -15,25 +15,25 @@ const ContentsStyle = styled.div`
 
 export default function Contents () {
 
-    const setAllTodos = useSetRecoilState(allTodosState);
+    
     const userInfo = useRecoilValue(userState);
     const uuid = userInfo ? userInfo.user.id : null;
     
+    // const setAllTodos = useSetRecoilState(allTodosState);
+    // useEffect(()=>{
+    //     const loadAllTodos = async () => {
+    //         const fetchedTodos = await fetchAllTodos(uuid);
+    //         setAllTodos(fetchedTodos);
+    //     }
 
-    useEffect(()=>{
-        const loadAllTodos = async () => {
-            const fetchedTodos = await fetchAllTodos(uuid);
-            setAllTodos(fetchedTodos);
-        }
-
-        loadAllTodos();
-    }, [uuid, setAllTodos])
+    //     loadAllTodos();
+    // }, [uuid, setAllTodos])
 
 
     return (
         <ContentsStyle>
-            <Calendar />
-            <TodoTemplate uuid={uuid}/>
+            <Calendar/>
+            <TodoTemplate/>
         </ContentsStyle>
     );
 }
