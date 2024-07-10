@@ -8,6 +8,7 @@ const TodoTemplateStyle = styled.div`
     flex-direction: column;
     height: 100%;
     width: 40%;
+    padding: 30px 40px;
 `;
 
 export default function TodoTemplate () {
