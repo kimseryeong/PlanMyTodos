@@ -16,7 +16,7 @@ import { fetchAllTodos, useUserUuid } from '../../API';
 const CalendarStyle = styled.div`
     height: 100%;
     width: 60%;
-    padding: 5px;
+    padding: 30px;
 `;
 
 export default function Calendar () {
