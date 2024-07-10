@@ -4,8 +4,16 @@
 
 <br>
 
+
+## 💡 배포 URL
+https://plantodolist.netlify.app
+
+<br>
+
 ## 📌 목적
-- React와 Supabase를 활용한 간단한 CRUD 기능 경험, 리액트 컴포넌트, 상태관리 학습 및 개인 프로젝트 배포 하기
+- 리액트 컴포넌트, 상태관리 학습
+- 오픈소스 Supabase를 활용한 간단한 CRUD 및 소셜로그인 기능 구현
+- 개인 프로젝트 배포 경험
 
 <br>
 
@@ -13,15 +21,15 @@
 - 언어: Javascript
 - 프레임워크: React.js
 - 오픈소스: Supabase
-- 배포: AWS
+- 배포: netlify
 
 <br>
 
 ## 📌 기능 List
 - Todo CRUD
-- Todo 완료 상태관리
-- 구글 캘린더 API
-- 로그인/회원가입 기능 (회원정보 DB저장)
+- Todo 완료 상태관리 (완료된 Todo 캘린더에 추가)
+- FullCalendar 라이브러리 활용
+- supabase 일반로그인, 구글 소셜로그인
 
 <br>
 
@@ -32,6 +40,9 @@
 
 ## 📌 ERD
 <img alt="ERD" src="https://github.com/kimseryeong/react_study/assets/106288108/bd51a397-4397-40f7-b982-1a78f1cad744"/>
+
+<br>
+
 
 <!-- # Getting Started with Create React App
 
