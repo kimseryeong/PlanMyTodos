@@ -51,13 +51,14 @@ function TodoList (){
 
     return (
         <>
-            {
-                todoList && todoList.map((v, i) => <TodoItem key={i} 
+
+            { uuid && todoList && todoList.map((v, i) => <TodoItem key={i} 
                     title={v.title} 
                     idx={v.idx} 
                     done={v.complete_state} 
                     uuid={uuid}/>
                 )
+                
             }
         </>
     );
