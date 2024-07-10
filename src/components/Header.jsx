@@ -4,32 +4,11 @@ import Signup from './Signup';
 import { userState } from '../lib/atom';
 import { supabase } from '../lib/supabaseClient';
 
-import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 const Header = () => {
 
-    //session recoil 저장하기
     const [userInfo, setUserInfo] = useRecoilState(userState);
-
-    useEffect(() => {
-
-        supabase.auth.getSession().then(({data: {session}}) => {
-            // console.log(session);
-            if(session) {
-                setUserInfo(session);
-            }
-            
-        })
-        
-        const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
-            if(session) {
-                setUserInfo(session);
-            }
-            return () => subscription.unsubscribe();
-        })
-    }, [userInfo])
-
 
     //logout
     const onLogout = async () => {
