@@ -14,6 +14,7 @@ const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
         .select('idx, title, start_date, complete_state')
         .eq('id', uuid)
         .eq('start_date', date)
+        .order('complete_state', { decending: false })
     
     if(error) {
         alert('[ TodoList > loadTodoList ] 문제가 발생했습니다.');
