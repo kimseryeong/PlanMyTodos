@@ -59,15 +59,17 @@ export const FullCalendarStyle = styled.div`
         background: #EAF2F8 !important;
     }
 
-    //오늘 날짜 배경 & 글씨
+    //today 배경
     .fc .fc-daygrid-day.fc-day-today{
         
         background-color: #fff;
     }
-    .fc .fc-daygrid-day.fc-day-today a{
+
+    //today 글씨
+    .fc-day-today > * > .fc-daygrid-day-top a{
         background-color: #A9CCE3;
         color: red;
-        border-radius: 50%;
+        border-radius: 40px;
         font-weight: 800;
     }
 `;
