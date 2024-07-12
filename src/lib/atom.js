@@ -36,31 +36,31 @@ export const allTodosState = atom({
 })
 
 //캘린더 이벤트
-export const calendarEvents = selector({
-    key: 'calendarEvents',
-    get: ({get}) => {
-        const userInfo = get(userState);
-        if(!userInfo) return;
+// export const calendarEvents = selector({
+//     key: 'calendarEvents',
+//     get: ({get}) => {
+//         const userInfo = get(userState);
+//         if(!userInfo) return;
 
-        const data = get(allTodosState);
-        const events = data
-            // .filter((v) => v.complete_state === true)
-            .map((v) => {
-                return {
-                    title: `📌${v.title}`,
-                    id: `todo_${v.idx}`, 
-                    start: v.start_date, 
-                    backgroundColor: 'transparent',
-                    fontSize: '12px'
-                }
-            });
+//         const data = get(allTodosState);
+//         const events = data
+//             // .filter((v) => v.complete_state === true)
+//             .map((v) => {
+//                 return {
+//                     title: `📌${v.title}`,
+//                     id: `todo_${v.idx}`, 
+//                     start: v.start_date, 
+//                     backgroundColor: 'transparent',
+//                     fontSize: '12px'
+//                 }
+//             });
 
-        // console.log('calendarEvents');
-        // console.log(data);
-        // console.log(events);
-        return events;
-    }
-})
+//         // console.log('calendarEvents');
+//         // console.log(data);
+//         // console.log(events);
+//         return events;
+//     }
+// })
 
 //에러 상태관리
 export const errorState = atom({

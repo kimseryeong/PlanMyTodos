@@ -76,28 +76,28 @@ export const onChangeCheck = async (idx, chkState) => {
 }
 
 //사용자 모든 todolist 조회
-export const fetchAllTodos = async (uuid) => {
-    if(!uuid) {
-        // console.log('로그인 후 이용하세요.');
-        return [];
-    }
+// export const fetchAllTodos = async (uuid) => {
+//     if(!uuid) {
+//         // console.log('로그인 후 이용하세요.');
+//         return [];
+//     }
 
-    try{
-        let {data, error} = await supabase
-            .from('todolist')
-            .select('idx, title, complete_state, start_date')
-            .eq('id', uuid)
-            .eq('complete_state', true)
-        if(error){
-            throw error;
-        }
-        return data;
-    }
-    catch(error){
-        console.log('fetching todos Error!!! ', error.message);
-        return [];
-    }
-}
+//     try{
+//         let {data, error} = await supabase
+//             .from('todolist')
+//             .select('idx, title, complete_state, start_date')
+//             .eq('id', uuid)
+//             .eq('complete_state', true)
+//         if(error){
+//             throw error;
+//         }
+//         return data;
+//     }
+//     catch(error){
+//         console.log('fetching todos Error!!! ', error.message);
+//         return [];
+//     }
+// }
 
 //사용자 uuid return hook
 export const useUserUuid = () => {

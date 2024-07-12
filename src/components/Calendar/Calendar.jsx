@@ -12,6 +12,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';  //boot5
 import { useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { fetchAllTodos, useUserUuid } from '../../API';
+import { supabase } from '../../lib/supabaseClient';
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -23,34 +24,52 @@ export default function Calendar () {
     const uuid = useUserUuid();
     const [date, setDate] = useRecoilState(dateState);
     const [error, setError] = useState(null);
-    const [todoList, setTodoList] = useRecoilState(todoState);
-    const [allTodos, setAllTodos] = useRecoilState(allTodosState);
-    const calEvents = useRecoilValue(calendarEvents);
-    
+    const todoList = useRecoilValue(todoState);
+
+    const [calEvents, setCalEvents] = useState([]);
     useEffect(()=>{
-        const loadAllTodos = async () => {
-            const fetchedTodos = await fetchAllTodos(uuid);
-            setAllTodos(fetchedTodos);
-            console.log(fetchedTodos);
+        // console.log(uuid);
+        if(!uuid) {
+            setCalEvents([]);
+            return;
         }
 
-        loadAllTodos();
-    }, [uuid, setAllTodos])
+        const loadEvents = async () => {
+            const {data, error} = await supabase.from('todolist')
+                .select('idx, title, complete_state, start_date')
+                .eq('id', uuid)
+                .eq('complete_state', true)
 
-    
+            if(error) setError('캘린더 이벤트 로드 중 에러 발생');
+
+            // console.log('loadEvents > ', data);
+            const events = data.map((todo) => {
+                return {
+                    title: `📌${todo.title}`,
+                    id: `todo_${todo.idx}`, 
+                    start: todo.start_date, 
+                    backgroundColor: '#EAF2F8',
+                    // backgroundColor: 'transparent',
+                    fontSize: '12px'
+                }
+            })
+
+            // console.log('events > ', events);
+            setCalEvents(events);
+        }
+        loadEvents();
+
+    }, [uuid, todoList])
     
     
     //날짜 상태관리
     const onClickDate = (date) => {
-        // console.log('onClickDate')
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         
         const fullDate = `${year}-${month}-${day}`;
         setDate(fullDate);
-
-        console.log(this);
     }
 
         
