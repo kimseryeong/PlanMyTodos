@@ -13,6 +13,8 @@ import { useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { fetchAllTodos, useUserUuid } from '../../API';
 import { supabase } from '../../lib/supabaseClient';
+import Modal from 'react-modal';
+import { IoCloseOutline } from "react-icons/io5";
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -20,11 +22,43 @@ const CalendarStyle = styled.div`
     padding: 30px;
 `;
 
+const style = {
+    overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
+    ,content: {
+        textAlign: 'center'
+        ,width: '500px'
+        ,height: '150px'
+        ,margin: 'auto'
+        ,borderRadius: '10px'
+        ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+        ,padding: '20px'
+        ,zIndex: 99999
+    }
+}
+
+const ModalHead = styled.div`
+    display: flex;
+    align-items: center;
+    .icon{
+        margin-left: auto; 
+        cursor: pointer;
+    }
+`;
+const ModalBody = styled.div`
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 700;
+`;
+
 export default function Calendar () {
     const uuid = useUserUuid();
     const [date, setDate] = useRecoilState(dateState);
     const [error, setError] = useState(null);
     const todoList = useRecoilValue(todoState);
+    const [isOpen, setIsOpen] = useState(false);
+    const [event, setEvent] = useState(null);
 
     const [calEvents, setCalEvents] = useState([]);
     useEffect(()=>{
@@ -49,7 +83,6 @@ export default function Calendar () {
                     id: `todo_${todo.idx}`, 
                     start: todo.start_date, 
                     backgroundColor: '#EAF2F8',
-                    // backgroundColor: 'transparent',
                     fontSize: '12px'
                 }
             })
@@ -72,27 +105,56 @@ export default function Calendar () {
         setDate(fullDate);
     }
 
-        
+    //캘린더 이벤트 클릭
+    const onClickEvent = (data) => {
+        // console.log('이벤트클릭',data.event._def);
+        setIsOpen(true);
+
+        const todo = data.event._def.title;
+        // console.log(todo);
+
+        setEvent(todo);
+    }
     
+    const isClose = () => setIsOpen(false);
+
     return (
-        <CalendarStyle>
-        <FullCalendarStyle>
-            <FullCalendar 
-                plugins={[dayGridPlugin, interaction, bootstrap5Plugin ]}
-                initialView='dayGridMonth'
-                events={calEvents}
-                viewHeight={300}
-                themeSystem='bootstrap5'
-                headerToolbar={{
-                    start: 'title',
-                    center: '',
-                    end: 'prev today next'
-                }}
-                dateClick={(arg) => onClickDate(arg.date)}
-                eventClick={(info) => console.log('이벤트클릭',info.event._def)} //이벤트 클릭
-                selectable={true}
-            />
-        </FullCalendarStyle>
-        </CalendarStyle>
+        <>
+            <CalendarStyle>
+            <FullCalendarStyle>
+                <FullCalendar 
+                    plugins={[dayGridPlugin, interaction, bootstrap5Plugin ]}
+                    initialView='dayGridMonth'
+                    events={calEvents}
+                    viewHeight={300}
+                    themeSystem='bootstrap5'
+                    headerToolbar={{
+                        start: 'title',
+                        center: '',
+                        end: 'prev today next'
+                    }}
+                    dateClick={(arg) => onClickDate(arg.date)}
+                    eventClick={(info) => onClickEvent(info)} //이벤트 클릭
+                    selectable={true}
+                    dayMaxEventRows={true}
+                    views={{
+                        dayMaxEventRows: 6
+                    }}
+                />
+            </FullCalendarStyle>
+            </CalendarStyle>
+            <Modal
+                isOpen={isOpen}
+                onRequestClose={isClose}
+                style={style}
+            >
+                <ModalHead onClick={isClose} >
+                    <IoCloseOutline className='icon'/>
+                </ModalHead>
+                <ModalBody>
+                    {event}
+                </ModalBody>
+            </Modal>
+        </>
     );
 }
