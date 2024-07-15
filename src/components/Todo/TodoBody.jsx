@@ -9,9 +9,11 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 const TodoBodyStyle = styled.div`
     flex: 1;
     padding: 20px;
-    padding-bottom: 48px;
-    overflow-y: auto;
-    // border: 1px solid #7FB3D5;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+
 `;
 
 export default function TodoBody(){

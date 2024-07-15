@@ -4,7 +4,24 @@ import { supabase } from '../../lib/supabaseClient';
 import { dateState, userState, todoState, todosRender, loadingState } from '../../lib/atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useUserUuid } from '../../API';
+import styled from 'styled-components';
 
+const TodoListStyle = styled.div`
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        width: 8px;
+        height: 8px;
+        background: #ddd;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #A9CCE3;
+        border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover{
+        cursor: pointer;
+    }
+`;
 
 const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
 
@@ -51,7 +68,7 @@ function TodoList (){
     }
 
     return (
-        <>
+        <TodoListStyle>
 
             { uuid && todoList && todoList.map((v, i) => <TodoItem key={i} 
                     title={v.title} 
@@ -61,7 +78,7 @@ function TodoList (){
                 )
                 
             }
-        </>
+        </TodoListStyle>
     );
 }
 
