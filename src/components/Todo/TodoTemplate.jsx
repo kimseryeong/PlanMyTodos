@@ -6,9 +6,11 @@ const TodoTemplateStyle = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
     width: 40%;
-    padding: 30px 40px;
+    font-family: 'pretendard';
+    font-weight: 600;
+    padding-left: 30px;
+    margin: 80px 0 30px;
 `;
 
 export default function TodoTemplate () {

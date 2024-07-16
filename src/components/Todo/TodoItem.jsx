@@ -5,10 +5,11 @@ import { AiFillEdit } from "react-icons/ai";
 
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { useSetRecoilState, useRecoilValue, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 
+import CmButton from '../Common/CmButton';
+import { supabase } from '../../lib/supabaseClient';
 import { todoState, loadingState } from '../../lib/atom'
-import { onUpdateTodo, onDeleteTodo, onChangeCheck } from '../../API';
 
 const Hover = styled.div`
     display: flex;
@@ -100,33 +101,44 @@ const ModalBody = styled.div`
         margin-top: 20px;
     }
 `;
-const Input = styled.input`
+const Input = styled.textarea`
     padding: 12px;
     width: 100%;
     outline: none;
     font-size: 16px;
     box-sizing: border-box;
     border: 1px solid #ddd;
+
+    &::-webkit-scrollbar{
+        width: 8px;
+        background: #ddd;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #A9CCE3;
+        border-radius: 20px;
+    }
+    &::-webkit-scrollbar-thumb:hover{
+        cursor: pointer;
+    }
 `;
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
     ,content: {
         textAlign: 'center'
-        ,width: '400px'
-        ,height: '200px'
+        ,width: '30vw'
+        ,height: '25vh'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
         ,padding: '20px'
         ,zIndex: 99999
+        ,fontFamily: 'pretendard'
     }
 }
 
 function TodoItem ({title, idx, done, uuid}) {
     const setTodoList = useSetRecoilState(todoState);
-    // const userInfo = useRecoilValue(userState);
-    // const uuid = userInfo ? userInfo.user.id : null;
     const [newTodo, setNewTodo] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const onModal = () => setIsOpen(true);
@@ -136,37 +148,66 @@ function TodoItem ({title, idx, done, uuid}) {
 
     //수정
     const onUpdate = async () => {
-        // console.log('onUpdate');
-        setLoading(true);
+        // setLoading(true);
 
         onClose();
-        const data = await onUpdateTodo(uuid, idx, newTodo);
 
-        setTodoList((prev) => prev.map(t => t.idx === data.idx ? data : t));
-        setLoading(false);
+        const { data, error } = await supabase
+            .from('todolist')
+            .update({ title: newTodo })
+            .eq('id', uuid)
+            .eq('idx', idx)
+            .select('idx, title, complete_state, start_date')
+
+        if(error) console.log(error);
+
+        setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
+        // setLoading(false);
     }
 
     //삭제
     const onDelete = async () => {
-        setLoading(true);
-        // console.log('onDelete');
+        // setLoading(true);
 
-        await onDeleteTodo(uuid, idx);
+        // await onDeleteTodo(uuid, idx);
+        const { data, error } = await supabase
+            .from('todolist')
+            .delete()
+            .eq('id', uuid)
+            .eq('idx', idx)
+
+        if(error) console.log(error);
+        
         setTodoList((prev) => prev.filter(t => t.idx !== idx));
 
-        setLoading(false);
+        // setLoading(false);
     }
 
     //완료체크
     const onCheck = async () => {
-        // console.log('현재완료상태: ', done);
-        setLoading(true);
+        // setLoading(true);
 
-        const data = await onChangeCheck(idx, !done);
-        // console.log(data);
-        setTodoList((prev)=> prev.map(t => t.idx === data.idx ? data : t));
+        const { data, error } = await supabase
+            .from('todolist')
+            .update({complete_state: !done})
+            .eq('idx', idx)
+            .select('idx, title, complete_state, start_date')
+
+        if(error) console.log(' 완료체크 중 실패 > ' , error);
+
+        const {data: todos, error: todosError} = await supabase.from('todolist')
+            .select('idx, title, complete_state, start_date')
+            .eq('id', uuid)
+            .eq('start_date', data[0].start_date)
+            .order('complete_state', { decending: false })
+
+
+        if(todosError) console.log('완료 처리 후 투두리스트 fetch 실패', todosError);
+
+        setTodoList(todos);
+
         
-        setLoading(false);
+        // setLoading(false);
     }
 
 
@@ -185,11 +226,11 @@ function TodoItem ({title, idx, done, uuid}) {
             >
                 <ModalHead onClick={onClose} >
                     <span>할 일 수정</span>
-                    <IoCloseOutline className='icon'/>
+                    <IoCloseOutline className='icon' size='25'/>
                 </ModalHead>
                 <ModalBody>
                     <Input autoFocus onChange={(e) => setNewTodo(e.target.value)} placeholder={title}/>
-                    <button className='btns backColor' onClick={onUpdate}>수정</button>
+                    <CmButton action={onUpdate} name={'수정'} backColor={true}></CmButton>
                 </ModalBody>
             </Modal>
 

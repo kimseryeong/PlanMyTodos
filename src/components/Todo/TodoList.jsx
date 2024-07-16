@@ -1,9 +1,8 @@
 import TodoItem from './TodoItem';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { dateState, userState, todoState, todosRender, loadingState } from '../../lib/atom';
+import { dateState, todoState, loadingState, userUuid } from '../../lib/atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { useUserUuid } from '../../API';
 import styled from 'styled-components';
 
 const TodoListStyle = styled.div`
@@ -39,18 +38,17 @@ const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
         console.log(error);
         return;
     }
-    else{
-        // console.log('[ TodoList > loadTodoList ]');
-        // console.log(data);
-        setTodoList(data); //recoil
-    }
+    
+    console.log('loadTodoList > ', data);
+    setTodoList(data);
     
     setLoading(false);
+    
 
 }
 
 function TodoList (){
-    const uuid = useUserUuid();
+    const uuid = useRecoilValue(userUuid);
     const date = useRecoilValue(dateState);
     const [todoList, setTodoList] = useRecoilState(todoState);
     const [error, setError] = useState(null);
@@ -60,8 +58,6 @@ function TodoList (){
         if(!uuid) return;
         loadTodoList(uuid, date, setTodoList, setLoading, setError);
     }, [uuid, date])
-
-    // const currTodos = useRecoilValue(todosRender);
 
     if (error) {
         return <div>{error}</div>;

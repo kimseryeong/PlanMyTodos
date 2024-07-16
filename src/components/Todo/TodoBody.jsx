@@ -2,13 +2,12 @@ import styled from 'styled-components';
 import TodoList from './TodoList';
 import TodoCreate from './TodoCreate';
 import Loading from '../../Loading';
-import { dateState, userState, todoState, todosRender, loadingState } from '../../lib/atom';
-import { useUserUuid } from '../../API';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { loadingState } from '../../lib/atom';
+import { useRecoilValue } from 'recoil';
 
 const TodoBodyStyle = styled.div`
     flex: 1;
-    padding: 20px;
+    padding: 20px 0;
     position: relative;
     display: flex;
     flex-direction: column;
