@@ -1,10 +1,35 @@
-import './Header.css';
+// import './Header.css';
 import Login from './Login';
 import Signup from './Signup';
+import CmButton from './Common/CmButton';
+import styled from 'styled-components';
+
+import { useRecoilState } from 'recoil';
 import { userState } from '../lib/atom';
 import { supabase } from '../lib/supabaseClient';
 
-import { useRecoilState } from 'recoil';
+const HeaderStyle = styled.div`
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    background-color: #fff;
+    font-family: 'pretendard';
+`;
+
+const Buttons = styled.div`
+    display: flex;
+    margin-left: auto;
+    padding: 0 10px;
+    align-items: center;
+`;
+
+const EmailStyle = styled.span`
+    font-size: 20px;
+    background-color: #EAF2F8;
+`;
 
 const Header = () => {
 
@@ -23,12 +48,12 @@ const Header = () => {
     
 
     return (
-        <header className='header'>
-            <div className='btn-contents'>
+        <HeaderStyle>
+            <Buttons>
                 {userInfo ? 
                 <>
-                    <span className='userEmail backColor'>{ userInfo.user.email }</span>
-                    <button onClick={onLogout}>Logout</button>
+                    <EmailStyle>{ userInfo.user.email }</EmailStyle>
+                    <CmButton action={onLogout} name={'Logout'}></CmButton>
                 </>
                 :
                 <>
@@ -36,8 +61,8 @@ const Header = () => {
                     <Signup>Sign Up</Signup>
                 </>
                 }
-            </div>
-        </header>
+            </Buttons>
+        </HeaderStyle>
     );
 }
 
