@@ -11,9 +11,8 @@ import { IoCloseOutline } from "react-icons/io5";
 
 import CmButton from '../Common/CmButton';
 import { FullCalendarStyle } from './FullcalendarStyle'
-import { dateState, todoState } from '../../lib/atom';
+import { dateState, todoState, userUuid } from '../../lib/atom';
 import { useEffect, useState} from 'react';
-import { useUserUuid } from '../../API';
 import { supabase } from '../../lib/supabaseClient';
 
 const CalendarStyle = styled.div`
@@ -63,7 +62,8 @@ const Buttons = styled.div`
 `;
 
 export default function Calendar () {
-    const uuid = useUserUuid();
+    const uuid = useRecoilValue(userUuid);
+
     const [date, setDate] = useRecoilState(dateState);
     const [error, setError] = useState(null);
     const todoList = useRecoilValue(todoState);
@@ -72,7 +72,6 @@ export default function Calendar () {
 
     const [calEvents, setCalEvents] = useState([]);
     useEffect(()=>{
-        // console.log(uuid);
         if(!uuid) {
             setCalEvents([]);
             return;
@@ -155,7 +154,7 @@ export default function Calendar () {
             >
                 <ModalHead>
                     <span>{date}</span>
-                    <IoCloseOutline className='icon' onClick={isClose} />
+                    <IoCloseOutline className='icon' onClick={isClose} size='25'/>
                 </ModalHead>
                 <ModalBody>
                     <p>{event}</p>
