@@ -7,6 +7,27 @@ export const userState = atom({
     ,default: null
 })
 
+
+// export const todosRender = selector({
+//     key: 'todosRender',
+//     get: ({get}) => {
+//         const uuid = get(userState);
+//         if(!uuid) return;
+
+//         const currTodos = get(todoState);
+//         return currTodos;
+//     }
+// }) 
+
+
+export const userUuid = selector({
+    key: 'userUuid',
+    get: ({get}) => {
+        const session = get(userState);
+        return session ? session.user.id : null
+    }
+})
+
 //날짜 상태관리
 export const dateState = atom({
     key: 'dateState'
@@ -18,49 +39,12 @@ export const todoState = atom({
     key: 'todoState',
     default: []
 })
-export const todosRender = selector({
-    key: 'todosRender',
-    get: ({get}) => {
-        const uuid = get(userState);
-        if(!uuid) return;
-
-        const currTodos = get(todoState);
-        return currTodos;
-    }
-}) 
 
 //모든 날짜 todolist 상태관리
 export const allTodosState = atom({
     key: 'fetchAllTodos',
     default: []
 })
-
-//캘린더 이벤트
-// export const calendarEvents = selector({
-//     key: 'calendarEvents',
-//     get: ({get}) => {
-//         const userInfo = get(userState);
-//         if(!userInfo) return;
-
-//         const data = get(allTodosState);
-//         const events = data
-//             // .filter((v) => v.complete_state === true)
-//             .map((v) => {
-//                 return {
-//                     title: `📌${v.title}`,
-//                     id: `todo_${v.idx}`, 
-//                     start: v.start_date, 
-//                     backgroundColor: 'transparent',
-//                     fontSize: '12px'
-//                 }
-//             });
-
-//         // console.log('calendarEvents');
-//         // console.log(data);
-//         // console.log(events);
-//         return events;
-//     }
-// })
 
 //에러 상태관리
 export const errorState = atom({
