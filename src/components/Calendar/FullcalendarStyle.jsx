@@ -9,7 +9,9 @@ export const FullCalendarStyle = styled.div`
     
     .fc {
         width: 100%;
-        font-size: 12px;
+        font-size: 13px;
+        font-family: 'pretendard';
+        font-weight: 500;
     }
 
 
@@ -67,9 +69,26 @@ export const FullCalendarStyle = styled.div`
 
     //today 글씨
     .fc-day-today > * > .fc-daygrid-day-top a{
-        background-color: #A9CCE3;
-        color: red;
+        background-color: #EAF2F8;
+        border: 1px solid #A9CCE3;
         border-radius: 40px;
         font-weight: 800;
+        padding: 2px;
+        margin: 0;
+        text-align: center;
+        width: 25px;
+    }
+
+    //캘린더 이벤트 팝업 스타일
+    .fc .fc-popover-header{
+        border-bottom-color: #fff;
+        background-color: #fff;
+        font-family: pretendard;
+        font-weight: 700;
+    }
+
+    .fc .fc-more-popover .fc-popover-body{
+        font-family: pretendard;
+        font-weight: 700;
     }
 `;

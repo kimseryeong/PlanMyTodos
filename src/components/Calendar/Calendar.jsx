@@ -2,19 +2,19 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interaction from '@fullcalendar/interaction';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-
-import { dateState, userState, todoState, allTodosState, calendarEvents } from '../../lib/atom';
-import { FullCalendarStyle } from './FullcalendarStyle'
-
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';  //boot5
-import { useEffect, useState} from 'react';
 import styled from 'styled-components';
-import { fetchAllTodos, useUserUuid } from '../../API';
-import { supabase } from '../../lib/supabaseClient';
 import Modal from 'react-modal';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { IoCloseOutline } from "react-icons/io5";
+
+import CmButton from '../Common/CmButton';
+import { FullCalendarStyle } from './FullcalendarStyle'
+import { dateState, todoState } from '../../lib/atom';
+import { useEffect, useState} from 'react';
+import { useUserUuid } from '../../API';
+import { supabase } from '../../lib/supabaseClient';
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -27,12 +27,13 @@ const style = {
     ,content: {
         textAlign: 'center'
         ,width: '500px'
-        ,height: '150px'
+        ,height: '230px'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
         ,padding: '20px'
         ,zIndex: 99999
+        ,fontFamily: 'pretendard'
     }
 }
 
@@ -46,10 +47,19 @@ const ModalHead = styled.div`
 `;
 const ModalBody = styled.div`
     margin-top: 20px;
+    font-weight: 700;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    font-weight: 700;
+    height: 75%;
+
+    p{
+        margin: 0;
+    }
+`;
+
+const Buttons = styled.div`
+    display: flex;
+    margin: auto auto 0 auto;
 `;
 
 export default function Calendar () {
@@ -76,18 +86,16 @@ export default function Calendar () {
 
             if(error) setError('캘린더 이벤트 로드 중 에러 발생');
 
-            // console.log('loadEvents > ', data);
             const events = data.map((todo) => {
                 return {
-                    title: `📌${todo.title}`,
+                    title: `${todo.title}`,
                     id: `todo_${todo.idx}`, 
                     start: todo.start_date, 
-                    backgroundColor: '#EAF2F8',
+                    backgroundColor: '#bee0f5',
                     fontSize: '12px'
                 }
             })
 
-            // console.log('events > ', events);
             setCalEvents(events);
         }
         loadEvents();
@@ -107,12 +115,9 @@ export default function Calendar () {
 
     //캘린더 이벤트 클릭
     const onClickEvent = (data) => {
-        // console.log('이벤트클릭',data.event._def);
         setIsOpen(true);
 
         const todo = data.event._def.title;
-        // console.log(todo);
-
         setEvent(todo);
     }
     
@@ -134,7 +139,7 @@ export default function Calendar () {
                         end: 'prev today next'
                     }}
                     dateClick={(arg) => onClickDate(arg.date)}
-                    eventClick={(info) => onClickEvent(info)} //이벤트 클릭
+                    eventClick={(info) => onClickEvent(info)}
                     selectable={true}
                     dayMaxEventRows={true}
                     views={{
@@ -148,11 +153,16 @@ export default function Calendar () {
                 onRequestClose={isClose}
                 style={style}
             >
-                <ModalHead onClick={isClose} >
-                    <IoCloseOutline className='icon'/>
+                <ModalHead>
+                    <span>{date}</span>
+                    <IoCloseOutline className='icon' onClick={isClose} />
                 </ModalHead>
                 <ModalBody>
-                    {event}
+                    <p>{event}</p>
+                    <Buttons>
+                        <CmButton name={'취소'} action={isClose} ></CmButton>
+                        <CmButton name={'수정'} backColor={true}></CmButton>
+                    </Buttons>
                 </ModalBody>
             </Modal>
         </>
