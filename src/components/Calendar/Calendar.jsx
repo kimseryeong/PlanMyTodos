@@ -25,7 +25,7 @@ const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
     ,content: {
         textAlign: 'center'
-        ,width: '500px'
+        ,maxWidth: '500px'
         ,height: '230px'
         ,margin: 'auto'
         ,borderRadius: '10px'
@@ -50,9 +50,32 @@ const ModalBody = styled.div`
     display: flex;
     flex-direction: column;
     height: 75%;
+`;
 
-    p{
-        margin: 0;
+const EventDetail = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    height: 60%;
+    overflow-y: auto;
+    padding: 5px 0;
+    
+    span{
+        width: 100%;
+        height: 100%;
+    }
+
+    &::-webkit-scrollbar{
+        width: 8px;
+        background: #ddd;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #A9CCE3;
+        border-radius: 20px;
+    }
+    &::-webkit-scrollbar-thumb:hover{
+        cursor: pointer;
     }
 `;
 
@@ -61,14 +84,40 @@ const Buttons = styled.div`
     margin: auto auto 0 auto;
 `;
 
+const Input = styled.textarea`
+    padding: 12px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+
+    &::-webkit-scrollbar{
+        width: 8px;
+        background: #ddd;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #A9CCE3;
+        border-radius: 20px;
+    }
+    &::-webkit-scrollbar-thumb:hover{
+        cursor: pointer;
+    }
+`;
+
 export default function Calendar () {
     const uuid = useRecoilValue(userUuid);
-
+    const [newTodo, setNewTodo] = useState('');
     const [date, setDate] = useRecoilState(dateState);
     const [error, setError] = useState(null);
-    const todoList = useRecoilValue(todoState);
+    const [todoList, setTodoList] = useRecoilState(todoState);
     const [isOpen, setIsOpen] = useState(false);
-    const [event, setEvent] = useState(null);
+    const [event, setEvent] = useState([]);
+    const isClose = () => {
+        setIsOpen(false);
+        setIsEdit(false);
+    }
+    const [isEdit, setIsEdit] = useState(false);
 
     const [calEvents, setCalEvents] = useState([]);
     useEffect(()=>{
@@ -88,7 +137,7 @@ export default function Calendar () {
             const events = data.map((todo) => {
                 return {
                     title: `${todo.title}`,
-                    id: `todo_${todo.idx}`, 
+                    id: `${todo.start_date}_${todo.idx}`, 
                     start: todo.start_date, 
                     backgroundColor: '#bee0f5',
                     fontSize: '12px'
@@ -117,10 +166,51 @@ export default function Calendar () {
         setIsOpen(true);
 
         const todo = data.event._def.title;
-        setEvent(todo);
-    }
+        const [date, idx] = data.event._def.publicId.split('_');
+
+        setEvent([todo, date, idx]);
+    }  
     
-    const isClose = () => setIsOpen(false);
+    //이벤트 삭제
+    const onDelete = async () => {
+        console.log('onDelete [todo, date, idx] > ', event);
+        console.log(uuid, Number(event[2]));
+
+        const { data, error } = await supabase
+            .from('todolist')
+            .delete()
+            .eq('id', uuid)
+            .eq('idx', Number(event[2]))
+            .select('idx, title, start_date')
+
+        if(error) console.log(error);
+
+        isClose();
+        setTodoList((prev) => prev.filter(t => t.idx !== Number(event[2])));
+    }
+
+    //이벤트 수정
+    const onClickUpdate = () => {
+        setIsEdit(true);
+
+        onUpdate();
+    }
+    const onUpdate = async () => {
+
+        if(isEdit){
+            const { data, error } = await supabase
+                .from('todolist')
+                .update({ title: newTodo })
+                .eq('id', uuid)
+                .eq('idx', Number(event[2]))
+                .select('idx, title, complete_state, start_date')
+            
+            if(error) console.log(error);
+            
+            setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
+            isClose();
+        }
+    }
 
     return (
         <>
@@ -153,14 +243,14 @@ export default function Calendar () {
                 style={style}
             >
                 <ModalHead>
-                    <span>{date}</span>
+                    <span>{event[1]}</span>
                     <IoCloseOutline className='icon' onClick={isClose} size='25'/>
                 </ModalHead>
                 <ModalBody>
-                    <p>{event}</p>
+                    {isEdit ? <Input onChange={(e) => setNewTodo(e.target.value)}>{event[0]}</Input> : <EventDetail><span>{event[0]}</span></EventDetail>}
                     <Buttons>
-                        <CmButton name={'취소'} action={isClose} ></CmButton>
-                        <CmButton name={'수정'} backColor={true}></CmButton>
+                        <CmButton name={'삭제'} action={onDelete} ></CmButton>
+                        <CmButton name={'수정'} action={onClickUpdate} backColor={true}></CmButton>
                     </Buttons>
                 </ModalBody>
             </Modal>
