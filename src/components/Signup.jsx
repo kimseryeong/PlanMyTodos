@@ -15,7 +15,7 @@ const style = {
     ,content: {
         textAlign: 'center'
         ,width: '400px'
-        ,height: '42vh'
+        ,height: '380px'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'

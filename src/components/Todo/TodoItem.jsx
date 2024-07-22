@@ -127,7 +127,7 @@ const style = {
     ,content: {
         textAlign: 'center'
         ,width: '30vw'
-        ,height: '25vh'
+        ,height: '250px'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
