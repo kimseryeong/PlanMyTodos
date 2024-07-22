@@ -139,7 +139,7 @@ export default function TodoCreate(){
                     complete_state: 'N', 
                 }
             ])
-            .select('idx, title, complete_state, start_date')
+            .select('idx, title, content, complete_state, start_date')
         
         if(error) console.log('onCreateTodo 데이터 삽입 중 에러 발생 !!! ');
 
