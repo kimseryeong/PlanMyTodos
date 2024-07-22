@@ -18,10 +18,6 @@ const TodoHeadStyle = styled.div`
         padding: 2px 20px;
         font-size: 20px;
     }
-    span{
-        color: #bababa;
-        font-size: 15px;
-    }
 `;
 
 export default function TodoHead() {
@@ -30,7 +26,6 @@ export default function TodoHead() {
     return (
         <TodoHeadStyle>
             <p>{date}</p>
-            <span>완료된 할 일은 캘린더에 추가됩니다.</span>
         </TodoHeadStyle>
     );
 }

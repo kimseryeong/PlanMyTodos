@@ -91,4 +91,10 @@ export const FullCalendarStyle = styled.div`
         font-family: pretendard;
         font-weight: 700;
     }
+
+
+    .cmpltTodos > div > div > div > .fc-event-title{
+        text-decoration-line: line-through;
+        color: #757575;
+    }
 `;

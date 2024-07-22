@@ -130,19 +130,26 @@ export default function Calendar () {
             const {data, error} = await supabase.from('todolist')
                 .select('idx, title, complete_state, start_date')
                 .eq('id', uuid)
-                .eq('complete_state', true)
+                .order('complete_state', false)
 
             if(error) setError('캘린더 이벤트 로드 중 에러 발생');
 
-            const events = data.map((todo) => {
-                return {
-                    title: `${todo.title}`,
+            // console.log('초기 데이터 > ', data);
+
+            const events = data.reduce((acc, todo)=> {
+                const event = {
+                    title: todo.title,
                     id: `${todo.start_date}_${todo.idx}`, 
                     start: todo.start_date, 
                     backgroundColor: '#bee0f5',
-                    fontSize: '12px'
-                }
-            })
+                    fontSize: '12px',
+                    className: todo.complete_state ? 'cmpltTodos' : ''
+                };
+                acc.push(event);
+                return acc;
+            }, [])
+            
+            // console.log('파싱 후 데이터 > ', events);
 
             setCalEvents(events);
         }
@@ -234,6 +241,8 @@ export default function Calendar () {
                     views={{
                         dayMaxEventRows: 6
                     }}
+                    eventOrder={'-className'}
+                    eventOrderStrict={true}
                 />
             </FullCalendarStyle>
             </CalendarStyle>
