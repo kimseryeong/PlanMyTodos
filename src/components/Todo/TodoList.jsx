@@ -27,7 +27,7 @@ const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
     setLoading(true);
 
     const {data, error} = await supabase.from('todolist')
-        .select('idx, title, start_date, complete_state')
+        .select('idx, title, content, start_date, complete_state')
         .eq('id', uuid)
         .eq('start_date', date)
         .order('complete_state', { decending: false })
@@ -68,6 +68,7 @@ function TodoList (){
 
             { uuid && todoList && todoList.map((v, i) => <TodoItem key={i} 
                     title={v.title} 
+                    content = {v.content}
                     idx={v.idx} 
                     done={v.complete_state} 
                     uuid={uuid}/>

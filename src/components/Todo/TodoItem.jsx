@@ -38,8 +38,6 @@ const UpdateBlock = styled.div`
     display: none;
 `;
 const TodoItemStyle = styled.div`
-    display: flex;
-    align-items: center;
     padding: 12px;
     &:hover {
         border: 1px solid #efefef;
@@ -72,12 +70,20 @@ const CheckBlock = styled.div`
 `;
 const Text = styled.div`
     flex: 1;
-    font-size: 17px;
+    font-size: 16px;
     color: #495057;
+    display: flex;
+    flex-direction: column;
+
     ${props => props.done && css`
         color: #ced4da;
         text-decoration-line: line-through;
     `}
+
+    span{
+        font-size: 13px;
+        color: #8c8c8c;
+    }
 `;
 const ModalHead = styled.div`
     display: flex;
@@ -96,18 +102,40 @@ const ModalBody = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+`;
 
-    button{
-        margin-top: 20px;
+const Wrap = styled.div`
+    display:flex;
+    width: 100%;
+    align-items: start;
+    justify-content: center;
+    margin: 5px 0;
+
+    div{
+        width: 50px;
+        font-size: 14px;
+        font-weight: 500;
     }
 `;
-const Input = styled.textarea`
-    padding: 12px;
+
+const Input = styled.input`
+    height: 40px;
     width: 100%;
+    padding: 8px;
     outline: none;
-    font-size: 16px;
+    font-size: 14px;
     box-sizing: border-box;
     border: 1px solid #ddd;
+`;
+
+const Textarea = styled.textarea`
+    padding: 8px;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    height: 100px;
 
     &::-webkit-scrollbar{
         width: 8px;
@@ -122,12 +150,35 @@ const Input = styled.textarea`
     }
 `;
 
+
+const Buttons = styled.div`
+    margin-top: 10px;
+`;
+
+const ItemHead = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+`;
+
+const Content = styled.div`
+    color: grey;
+    font-size: 13px;
+    margin-left: 45px;
+
+    ${props => props.done && css`
+        color: #ced4da;
+        text-decoration-line: line-through;
+    `}
+`;
+
+
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
     ,content: {
         textAlign: 'center'
-        ,width: '30vw'
-        ,height: '250px'
+        ,width: '40vw'
+        ,height: '300px'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
@@ -137,9 +188,10 @@ const style = {
     }
 }
 
-function TodoItem ({title, idx, done, uuid}) {
+function TodoItem ({title, content, idx, done, uuid}) {
     const setTodoList = useSetRecoilState(todoState);
-    const [newTodo, setNewTodo] = useState('');
+    const [newTodoTitle, setNewTodoTitle] = useState('');
+    const [newTodoContent, setNewTodoContent] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const onModal = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
@@ -154,10 +206,10 @@ function TodoItem ({title, idx, done, uuid}) {
 
         const { data, error } = await supabase
             .from('todolist')
-            .update({ title: newTodo })
+            .update({ title: newTodoTitle, content: newTodoContent })
             .eq('id', uuid)
             .eq('idx', idx)
-            .select('idx, title, complete_state, start_date')
+            .select('idx, title, content, complete_state, start_date')
 
         if(error) console.log(error);
 
@@ -191,12 +243,12 @@ function TodoItem ({title, idx, done, uuid}) {
             .from('todolist')
             .update({complete_state: !done})
             .eq('idx', idx)
-            .select('idx, title, complete_state, start_date')
+            .select('idx, title, content, complete_state, start_date')
 
         if(error) console.log(' 완료체크 중 실패 > ' , error);
 
         const {data: todos, error: todosError} = await supabase.from('todolist')
-            .select('idx, title, complete_state, start_date')
+            .select('idx, title, content, complete_state, start_date')
             .eq('id', uuid)
             .eq('start_date', data[0].start_date)
             .order('complete_state', { decending: false })
@@ -213,12 +265,19 @@ function TodoItem ({title, idx, done, uuid}) {
 
     return (
         <TodoItemStyle>
-            <CheckBlock done={done} onClick={onCheck}>{done && <MdCheck/>}</CheckBlock>
-            <Text done={done}>{title}</Text>
-            <Hover>
-                <UpdateBlock onClick={onModal}><AiFillEdit/></UpdateBlock>
-                <RemoveBlock onClick={onDelete}><MdDelete /></RemoveBlock>
-            </Hover>
+            <ItemHead>
+                <CheckBlock done={done} onClick={onCheck}>{done && <MdCheck/>}</CheckBlock>
+                <Text done={done}>
+                    {title}
+                    
+                </Text>
+                <Hover>
+                    <UpdateBlock onClick={onModal}><AiFillEdit/></UpdateBlock>
+                    <RemoveBlock onClick={onDelete}><MdDelete /></RemoveBlock>
+                </Hover>
+            </ItemHead>
+            <Content done={done}>{content}</Content>
+
             <Modal
                 isOpen={isOpen}
                 onRequestClose={onClose}
@@ -229,9 +288,25 @@ function TodoItem ({title, idx, done, uuid}) {
                     <IoCloseOutline className='icon' size='25'/>
                 </ModalHead>
                 <ModalBody>
-                    <Input autoFocus onChange={(e) => setNewTodo(e.target.value)} placeholder={title}/>
-                    <CmButton action={onUpdate} name={'수정'} backColor={true}></CmButton>
+                    <Wrap>
+                        <div>제목</div>
+                        <Input 
+                            autoFocus 
+                            onChange={(e) => setNewTodoTitle(e.target.value)}
+                            defaultValue={title} 
+                        />
+                    </Wrap>
+                    <Wrap>
+                        <div>내용</div>
+                        <Textarea 
+                            onChange={(e) => setNewTodoContent(e.target.value)} 
+                            defaultValue={content}
+                        />
+                    </Wrap>
                 </ModalBody>
+                <Buttons>
+                    <CmButton action={onUpdate} name={'수정'} backColor={true}></CmButton>
+                </Buttons>
             </Modal>
 
             

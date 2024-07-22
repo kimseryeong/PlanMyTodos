@@ -26,7 +26,7 @@ const style = {
     ,content: {
         textAlign: 'center'
         ,maxWidth: '500px'
-        ,height: '230px'
+        ,height: '280px'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
@@ -39,32 +39,50 @@ const style = {
 const ModalHead = styled.div`
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
+    
     .icon{
         margin-left: auto; 
         cursor: pointer;
     }
 `;
 const ModalBody = styled.div`
-    margin-top: 20px;
-    font-weight: 700;
     display: flex;
     flex-direction: column;
-    height: 75%;
 `;
 
-const EventDetail = styled.div`
-    display: flex;
-    align-items: center;
+const Wrap = styled.div`
+    display:flex;
+    width: 100%;
+    align-items: start;
     justify-content: center;
-    margin: 0;
-    height: 60%;
-    overflow-y: auto;
-    padding: 5px 0;
-    
-    span{
-        width: 100%;
-        height: 100%;
+    margin: 5px 0;
+
+    div{
+        width: 50px;
+        font-size: 14px;
+        font-weight: 500;
     }
+`;
+
+const Input = styled.input`
+    height: 40px;
+    width: 100%;
+    padding: 8px;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+`;
+
+const Textarea = styled.textarea`
+    padding: 8px;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    height: 100px;
 
     &::-webkit-scrollbar{
         width: 8px;
@@ -77,6 +95,31 @@ const EventDetail = styled.div`
     &::-webkit-scrollbar-thumb:hover{
         cursor: pointer;
     }
+`;
+
+const EventDetail = styled.div`
+    margin: 20px 0;
+
+    &::-webkit-scrollbar{
+        width: 8px;
+        background: #ddd;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #A9CCE3;
+        border-radius: 20px;
+    }
+    &::-webkit-scrollbar-thumb:hover{
+        cursor: pointer;
+    }
+`;
+
+const Title = styled.div`
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+`;
+const Content = styled.div`
+    font-size: 14px;
 `;
 
 const Buttons = styled.div`
@@ -84,30 +127,10 @@ const Buttons = styled.div`
     margin: auto auto 0 auto;
 `;
 
-const Input = styled.textarea`
-    padding: 12px;
-    width: 100%;
-    outline: none;
-    font-size: 16px;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-
-    &::-webkit-scrollbar{
-        width: 8px;
-        background: #ddd;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
-        border-radius: 20px;
-    }
-    &::-webkit-scrollbar-thumb:hover{
-        cursor: pointer;
-    }
-`;
-
 export default function Calendar () {
     const uuid = useRecoilValue(userUuid);
-    const [newTodo, setNewTodo] = useState('');
+    const [newTodoTitle, setNewTodoTitle] = useState('');
+    const [newTodoContent, setNewTodoContent] = useState('');
     const [date, setDate] = useRecoilState(dateState);
     const [error, setError] = useState(null);
     const [todoList, setTodoList] = useRecoilState(todoState);
@@ -128,7 +151,7 @@ export default function Calendar () {
 
         const loadEvents = async () => {
             const {data, error} = await supabase.from('todolist')
-                .select('idx, title, complete_state, start_date')
+                .select('idx, title, content, complete_state, start_date')
                 .eq('id', uuid)
                 .order('complete_state', false)
 
@@ -143,13 +166,14 @@ export default function Calendar () {
                     start: todo.start_date, 
                     backgroundColor: '#bee0f5',
                     fontSize: '12px',
-                    className: todo.complete_state ? 'cmpltTodos' : ''
+                    className: todo.complete_state ? 'cmpltTodos' : '',
+                    description: todo.content,
                 };
                 acc.push(event);
                 return acc;
             }, [])
             
-            // console.log('파싱 후 데이터 > ', events);
+            console.log('파싱 후 데이터 > ', events);
 
             setCalEvents(events);
         }
@@ -172,10 +196,12 @@ export default function Calendar () {
     const onClickEvent = (data) => {
         setIsOpen(true);
 
-        const todo = data.event._def.title;
+        console.log('event > ', data.event);
+        const title = data.event._def.title;
         const [date, idx] = data.event._def.publicId.split('_');
+        const content = data.event._def.extendedProps.description;
 
-        setEvent([todo, date, idx]);
+        setEvent([title, date, idx, content]);
     }  
     
     //이벤트 삭제
@@ -207,7 +233,7 @@ export default function Calendar () {
         if(isEdit){
             const { data, error } = await supabase
                 .from('todolist')
-                .update({ title: newTodo })
+                .update({ title: newTodoTitle, content: newTodoContent })
                 .eq('id', uuid)
                 .eq('idx', Number(event[2]))
                 .select('idx, title, complete_state, start_date')
@@ -256,7 +282,34 @@ export default function Calendar () {
                     <IoCloseOutline className='icon' onClick={isClose} size='25'/>
                 </ModalHead>
                 <ModalBody>
-                    {isEdit ? <Input onChange={(e) => setNewTodo(e.target.value)}>{event[0]}</Input> : <EventDetail><span>{event[0]}</span></EventDetail>}
+                    {
+                    isEdit ? 
+                    <>
+                        {/* <Input onChange={(e) => setNewTodo(e.target.value)}>
+                            {event[0]}
+                        </Input>  */}
+                        <Wrap>
+                            <div>제목</div>
+                            <Input 
+                                autoFocus 
+                                onChange={(e) => setNewTodoTitle(e.target.value)}
+                                defaultValue={event[0]} 
+                            />
+                        </Wrap>
+                        <Wrap>
+                            <div>내용</div>
+                            <Textarea 
+                                onChange={(e) => setNewTodoContent(e.target.value)} 
+                                defaultValue={event[3]}
+                            />
+                        </Wrap>
+                    </>
+                    : 
+                        <EventDetail>
+                            <Title>{event[0]}</Title>
+                            <Content>{event[3]}</Content>
+                        </EventDetail>
+                    }
                     <Buttons>
                         <CmButton name={'삭제'} action={onDelete} ></CmButton>
                         <CmButton name={'수정'} action={onClickUpdate} backColor={true}></CmButton>
