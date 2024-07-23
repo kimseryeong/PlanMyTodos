@@ -33,6 +33,8 @@ const style = {
         ,padding: '20px'
         ,zIndex: 99999
         ,fontFamily: 'pretendard'
+        ,display: 'flex'
+        ,flexDirection: 'column'
     }
 }
 
@@ -49,6 +51,7 @@ const ModalHead = styled.div`
 const ModalBody = styled.div`
     display: flex;
     flex-direction: column;
+    flex: 1;
 `;
 
 const Wrap = styled.div`
@@ -99,6 +102,7 @@ const Textarea = styled.textarea`
 
 const EventDetail = styled.div`
     margin: 20px 0;
+    flex: 1;
 
     &::-webkit-scrollbar{
         width: 8px;
@@ -284,10 +288,7 @@ export default function Calendar () {
                 <ModalBody>
                     {
                     isEdit ? 
-                    <>
-                        {/* <Input onChange={(e) => setNewTodo(e.target.value)}>
-                            {event[0]}
-                        </Input>  */}
+                    <EventDetail>
                         <Wrap>
                             <div>제목</div>
                             <Input 
@@ -303,7 +304,7 @@ export default function Calendar () {
                                 defaultValue={event[3]}
                             />
                         </Wrap>
-                    </>
+                    </EventDetail>
                     : 
                         <EventDetail>
                             <Title>{event[0]}</Title>
