@@ -22,11 +22,16 @@ const CalendarStyle = styled.div`
 `;
 
 const style = {
-    overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
+    overlay: {
+        backgroundColor: "rgba(0, 0, 0, 0.5)", 
+        zIndex: 1000,
+    }
     ,content: {
         textAlign: 'center'
         ,maxWidth: '500px'
-        ,height: '280px'
+        ,minHeight: 'fit-content'
+        ,maxHeight: '50vh'
+        ,transform: 'translate(0, 50%)'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
@@ -102,7 +107,7 @@ const Textarea = styled.textarea`
 
 const EventDetail = styled.div`
     margin: 20px 0;
-    flex: 1;
+    flex: 1 1 auto;
 
     &::-webkit-scrollbar{
         width: 8px;
@@ -206,6 +211,8 @@ export default function Calendar () {
         const content = data.event._def.extendedProps.description;
 
         setEvent([title, date, idx, content]);
+        setNewTodoTitle(title);
+        setNewTodoContent(content);
     }  
     
     //이벤트 삭제
@@ -240,10 +247,10 @@ export default function Calendar () {
                 .update({ title: newTodoTitle, content: newTodoContent })
                 .eq('id', uuid)
                 .eq('idx', Number(event[2]))
-                .select('idx, title, complete_state, start_date')
+                .select('idx, title, content, complete_state, start_date')
             
             if(error) console.log(error);
-            
+
             setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
             isClose();
         }
@@ -294,7 +301,7 @@ export default function Calendar () {
                             <Input 
                                 autoFocus 
                                 onChange={(e) => setNewTodoTitle(e.target.value)}
-                                defaultValue={event[0]} 
+                                defaultValue={event[0]}
                             />
                         </Wrap>
                         <Wrap>
