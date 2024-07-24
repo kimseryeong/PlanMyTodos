@@ -3,7 +3,7 @@ import { MdCheck, MdDelete } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillEdit } from "react-icons/ai";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 
@@ -203,6 +203,10 @@ function TodoItem ({title, content, idx, done, uuid}) {
     }
     const [loading, setLoading] = useRecoilState(loadingState);
 
+    useEffect(() => {
+        setNewTodoTitle(title);
+        setNewTodoContent(content);
+    }, [title, content])
 
     //수정
     const onUpdate = async () => {
@@ -227,7 +231,6 @@ function TodoItem ({title, content, idx, done, uuid}) {
     const onDelete = async () => {
         // setLoading(true);
 
-        // await onDeleteTodo(uuid, idx);
         const { data, error } = await supabase
             .from('todolist')
             .delete()
