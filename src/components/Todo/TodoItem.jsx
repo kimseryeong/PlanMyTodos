@@ -190,8 +190,8 @@ const style = {
 
 function TodoItem ({title, content, idx, done, uuid}) {
     const setTodoList = useSetRecoilState(todoState);
-    const [newTodoTitle, setNewTodoTitle] = useState('');
-    const [newTodoContent, setNewTodoContent] = useState('');
+    const [newTodoTitle, setNewTodoTitle] = useState(title);
+    const [newTodoContent, setNewTodoContent] = useState(content);
     const [isOpen, setIsOpen] = useState(false);
     const onModal = () => setIsOpen(true);
     const onClose = () => setIsOpen(false);
