@@ -194,7 +194,13 @@ function TodoItem ({title, content, idx, done, uuid}) {
     const [newTodoContent, setNewTodoContent] = useState(content);
     const [isOpen, setIsOpen] = useState(false);
     const onModal = () => setIsOpen(true);
-    const onClose = () => setIsOpen(false);
+    const onClose = () => {
+        setIsOpen(false);
+
+        //input, textarea onChange 초기화
+        setNewTodoTitle(title);
+        setNewTodoContent(content);
+    }
     const [loading, setLoading] = useRecoilState(loadingState);
 
 
