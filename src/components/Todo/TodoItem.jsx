@@ -178,7 +178,8 @@ const style = {
     ,content: {
         textAlign: 'center'
         ,width: '40vw'
-        ,height: '300px'
+        ,minHeight: 'fit-content'
+        ,maxHeight: 'fit-content'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'

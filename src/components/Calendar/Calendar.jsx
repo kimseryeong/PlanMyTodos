@@ -28,10 +28,9 @@ const style = {
     }
     ,content: {
         textAlign: 'center'
-        ,maxWidth: '500px'
+        ,maxWidth: '40vw'
         ,minHeight: 'fit-content'
-        ,maxHeight: '50vh'
-        ,transform: 'translate(0, 50%)'
+        ,maxHeight: 'fit-content'
         ,margin: 'auto'
         ,borderRadius: '10px'
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
