@@ -163,8 +163,12 @@ const ItemHead = styled.div`
 
 const Content = styled.div`
     color: grey;
-    font-size: 13px;
     margin-left: 45px;
+
+    pre{
+        font-family: 'pretendard';
+        font-size: 13.5px;
+    }
 
     ${props => props.done && css`
         color: #ced4da;
@@ -286,7 +290,7 @@ function TodoItem ({title, content, idx, done, uuid}) {
                     <RemoveBlock onClick={onDelete}><MdDelete /></RemoveBlock>
                 </Hover>
             </ItemHead>
-            <Content done={done}>{content}</Content>
+            <Content done={done}><pre>{content}</pre></Content>
 
             <Modal
                 isOpen={isOpen}

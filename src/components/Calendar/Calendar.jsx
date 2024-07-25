@@ -128,6 +128,11 @@ const Title = styled.div`
 `;
 const Content = styled.div`
     font-size: 14px;
+
+    pre{
+        font-family: 'pretendard';
+        font-size: 13.5px;
+    }
 `;
 
 const Buttons = styled.div`
@@ -294,27 +299,27 @@ export default function Calendar () {
                 <ModalBody>
                     {
                     isEdit ? 
-                    <EventDetail>
-                        <Wrap>
-                            <div>제목</div>
-                            <Input 
-                                autoFocus 
-                                onChange={(e) => setNewTodoTitle(e.target.value)}
-                                defaultValue={event[0]}
-                            />
-                        </Wrap>
-                        <Wrap>
-                            <div>내용</div>
-                            <Textarea 
-                                onChange={(e) => setNewTodoContent(e.target.value)} 
-                                defaultValue={event[3]}
-                            />
-                        </Wrap>
-                    </EventDetail>
+                        <EventDetail>
+                            <Wrap>
+                                <div>제목</div>
+                                <Input 
+                                    autoFocus 
+                                    onChange={(e) => setNewTodoTitle(e.target.value)}
+                                    defaultValue={event[0]}
+                                />
+                            </Wrap>
+                            <Wrap>
+                                <div>내용</div>
+                                <Textarea 
+                                    onChange={(e) => setNewTodoContent(e.target.value)} 
+                                    defaultValue={event[3]}
+                                />
+                            </Wrap>
+                        </EventDetail>
                     : 
                         <EventDetail>
                             <Title>{event[0]}</Title>
-                            <Content>{event[3]}</Content>
+                            <Content><pre>{event[3]}</pre></Content>
                         </EventDetail>
                     }
                     <Buttons>
