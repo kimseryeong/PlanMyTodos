@@ -8,6 +8,8 @@ import styled, {css} from 'styled-components';
 import Modal from 'react-modal';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { IoCloseOutline } from "react-icons/io5";
+import { AiFillEdit } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
 
 import { CmScrollStyle } from '../Common/CmScrollStyle';
 import CmButton from '../Common/CmButton';
@@ -120,6 +122,21 @@ const Content = styled.div`
 const Buttons = styled.div`
     display: flex;
     margin: auto auto 0 auto;
+`;
+
+const IconBlock = styled.div`
+    margin: 5px;
+    &:hover{
+        cursor: pointer;
+    }
+
+    ${props => props.type === 'update' && css`
+        &:hover{color: #7FB3D5;}
+    `}
+
+    ${props => props.type === 'delete' && css`
+        &:hover{color: #ff6b6b;}
+    `}
 `;
 
 export default function Calendar () {
@@ -281,6 +298,7 @@ export default function Calendar () {
                 <ModalBody>
                     {
                     isEdit ? 
+                    <>
                         <EventDetail>
                             <Wrap>
                                 <div>제목</div>
@@ -298,16 +316,23 @@ export default function Calendar () {
                                 />
                             </Wrap>
                         </EventDetail>
-                    : 
+                        <Buttons>
+                            <CmButton name={'취소'} action={isClose}></CmButton>
+                            <CmButton name={'저장'} action={onClickUpdate} backColor={true}></CmButton>
+                        </Buttons>
+                    </>
+                    :
+                    <>
                         <EventDetail>
                             <Title>{event[0]}</Title>
                             <Content><pre>{event[3]}</pre></Content>
                         </EventDetail>
+                        <Buttons>
+                            <IconBlock type={'delete'}><MdDelete onClick={onDelete} size={'20'}/></IconBlock>
+                            <IconBlock type={'update'}><AiFillEdit onClick={onClickUpdate} size={'20'}/></IconBlock>
+                        </Buttons>
+                    </>
                     }
-                    <Buttons>
-                        <CmButton name={'삭제'} action={onDelete} ></CmButton>
-                        <CmButton name={'수정'} action={onClickUpdate} backColor={true}></CmButton>
-                    </Buttons>
                 </ModalBody>
             </Modal>
         </>
