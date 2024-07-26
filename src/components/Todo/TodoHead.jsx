@@ -4,28 +4,17 @@ import styled from 'styled-components';
 
 
 //component style
-const TodoHeadStyle = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    p {
-        background-color: #EAF2F8;
-        border: 1px solid #7FB3D5;
-        border-radius: 20px;
-        margin: 0;
-        margin-right: auto;
-        padding: 2px 20px;
-        font-size: 20px;
-    }
+const TodoHeadStyle = styled.span`
+    margin: 0;
+    margin-right: auto;
+    font-size: 20px;
+    box-shadow: inset 0 -11px #bee1f7;
 `;
 
 export default function TodoHead() {
     const date = useRecoilValue(dateState);
 
     return (
-        <TodoHeadStyle>
-            <p>{date}</p>
-        </TodoHeadStyle>
+        <TodoHeadStyle>{date}</TodoHeadStyle>
     );
 }
