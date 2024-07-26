@@ -8,6 +8,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { dateState, todoState, errorState, userUuid } from '../../lib/atom';
 import Loading from '../../Loading';
 import CmButton from '../Common/CmButton';
+import { CmScrollStyle } from '../Common/CmScrollStyle'
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -58,17 +59,7 @@ const Textarea = styled.textarea`
     border: 1px solid #ddd;
     height: 100px;
 
-    &::-webkit-scrollbar{
-        width: 8px;
-        background: #ddd;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
-        border-radius: 20px;
-    }
-    &::-webkit-scrollbar-thumb:hover{
-        cursor: pointer;
-    }
+    ${CmScrollStyle}
 `;
 
 const ModalHead = styled.div`

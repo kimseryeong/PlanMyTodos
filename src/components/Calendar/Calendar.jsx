@@ -4,11 +4,12 @@ import interaction from '@fullcalendar/interaction';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';  //boot5
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import Modal from 'react-modal';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { IoCloseOutline } from "react-icons/io5";
 
+import { CmScrollStyle } from '../Common/CmScrollStyle';
 import CmButton from '../Common/CmButton';
 import { FullCalendarStyle } from './FullcalendarStyle'
 import { dateState, todoState, userUuid } from '../../lib/atom';
@@ -91,34 +92,14 @@ const Textarea = styled.textarea`
     border: 1px solid #ddd;
     height: 100px;
 
-    &::-webkit-scrollbar{
-        width: 8px;
-        background: #ddd;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
-        border-radius: 20px;
-    }
-    &::-webkit-scrollbar-thumb:hover{
-        cursor: pointer;
-    }
+    ${CmScrollStyle}
 `;
 
 const EventDetail = styled.div`
     margin: 20px 0;
     flex: 1 1 auto;
 
-    &::-webkit-scrollbar{
-        width: 8px;
-        background: #ddd;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
-        border-radius: 20px;
-    }
-    &::-webkit-scrollbar-thumb:hover{
-        cursor: pointer;
-    }
+    ${CmScrollStyle}
 `;
 
 const Title = styled.div`
@@ -132,6 +113,7 @@ const Content = styled.div`
     pre{
         font-family: 'pretendard';
         font-size: 13.5px;
+        white-space: pre-wrap;
     }
 `;
 

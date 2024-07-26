@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 
+import { CmScrollStyle } from '../Common/CmScrollStyle';
 import CmButton from '../Common/CmButton';
 import { supabase } from '../../lib/supabaseClient';
 import { todoState, loadingState } from '../../lib/atom'
@@ -137,17 +138,7 @@ const Textarea = styled.textarea`
     border: 1px solid #ddd;
     height: 100px;
 
-    &::-webkit-scrollbar{
-        width: 8px;
-        background: #ddd;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
-        border-radius: 20px;
-    }
-    &::-webkit-scrollbar-thumb:hover{
-        cursor: pointer;
-    }
+    ${CmScrollStyle}
 `;
 
 
@@ -164,10 +155,11 @@ const ItemHead = styled.div`
 const Content = styled.div`
     color: grey;
     margin-left: 45px;
-
+    
     pre{
         font-family: 'pretendard';
         font-size: 13.5px;
+        white-space: pre-wrap;
     }
 
     ${props => props.done && css`

@@ -1,5 +1,7 @@
 import TodoItem from './TodoItem';
 import React, { useEffect, useState } from 'react';
+
+import { CmScrollStyle } from '../Common/CmScrollStyle';
 import { supabase } from '../../lib/supabaseClient';
 import { dateState, todoState, loadingState, userUuid } from '../../lib/atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -8,18 +10,7 @@ import styled from 'styled-components';
 const TodoListStyle = styled.div`
     overflow-y: auto;
 
-    &::-webkit-scrollbar{
-        width: 8px;
-        height: 8px;
-        background: #ddd;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
-        border-radius: 10px;
-    }
-    &::-webkit-scrollbar-thumb:hover{
-        cursor: pointer;
-    }
+    ${CmScrollStyle}
 `;
 
 const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
