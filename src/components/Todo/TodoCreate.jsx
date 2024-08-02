@@ -111,7 +111,11 @@ export default function TodoCreate(){
     const [todoContent, setTodoContent] = useState(''); //사용자 입력 todo content
     
     const [isOpen, setIsOpen] = useState(false);
-    const onModal = () => setIsOpen(true);
+    const onModal = () => {
+        setIsOpen(true);
+        setTodoTitle('');
+        setTodoContent('');
+    }
     const closeModal = () => setIsOpen(false);
 
     const onCreate = async () => {
