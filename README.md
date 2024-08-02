@@ -26,9 +26,12 @@ https://plantodolist.netlify.app
 <br>
 
 ## 📌 기능 List
-- Todo CRUD
-- Todo 완료 상태관리 (완료된 Todo 캘린더에 추가)
+- Todo 등록, 수정, 삭제
+- Todo list 조회
+- Todo 완료 상태관리
 - FullCalendar 라이브러리 활용
+    - 캘린더에서 todo list 조회 
+    - todo 상세 조회
 - supabase 일반로그인, 구글 소셜로그인
 
 <br>
