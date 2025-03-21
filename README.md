@@ -1,4 +1,4 @@
-# IT's My Plan - ToDoList
+# IT's My Plan - TodoWeb
 
 ### React 프론트엔드 스터디 [05.06 - 06.28]
 
