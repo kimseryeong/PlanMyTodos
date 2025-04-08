@@ -6,7 +6,7 @@
 
 
 ## 💡 배포 URL
-https://plantodolist.netlify.app
+[📆 PlanMyTodos](https://planmytodos.netlify.app/#)
 
 <br>
 
