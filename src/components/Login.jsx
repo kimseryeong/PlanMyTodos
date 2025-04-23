@@ -8,6 +8,7 @@ import { GrSecure } from 'react-icons/gr'
 import styled from 'styled-components';
 import CmButton from './Common/CmButton';
 import CmErrorMsg from './Common/CmErrorMsg';
+import { ReactSVG } from "react-svg";
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -24,7 +25,7 @@ const style = {
     }
 }
 
-const GoogleBtn = styled.button`
+const GoogleBtn = styled.a`
     margin-top: 20px;
     display: inline-flex;
     justify-content: center;
@@ -33,18 +34,18 @@ const GoogleBtn = styled.button`
     width: 90%;
     height: 45px;
     padding-left: 10px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     border: 1px solid #1976D2;
+    color: inherit;
+    text-decoration: none;
 
     &:hover{
         box-shadow: 1px 1px 1px #1976D2;
     }
 
-    img{
-        width: 20px;
-        height: 20px;
-        margin: 5px;
+    svg{
+        margin-right: 10px;
     }
 `;
 
@@ -164,9 +165,9 @@ const Login = ({children}) => {
             >
             <h2>{children}</h2>
                     
-            <GoogleBtn onClick={onGoogleLogin}>
-                <img className='social-logo' src='https://img.icons8.com/?size=100&id=17949&format=png&color=000000' alt='google logo'/>
-                구글 계정으로 로그인
+            <GoogleBtn href="https://planmytodos-api-production.up.railway.app/oauth2/authorization/google">
+            <ReactSVG src="/images/google.svg"/>
+                <span>Login with Google</span>
             </GoogleBtn>
 
             <HrSect>or</HrSect>     
