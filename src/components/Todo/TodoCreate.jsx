@@ -9,6 +9,7 @@ import { dateState, todoState, errorState, userUuid } from '../../lib/atom';
 import Loading from '../../Loading';
 import CmButton from '../Common/CmButton';
 import { CmScrollStyle } from '../Common/CmScrollStyle'
+import { useSession } from '../SessionProvider'
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -102,7 +103,8 @@ const Buttons = styled.div`
 `;
 
 export default function TodoCreate(){
-    const uuid = useRecoilValue(userUuid);
+    const { session, fetchSession } = useSession();
+    const uuid = session ? session.id : null;
     const date = useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
     const [loading, setLoading] = useState(false);
