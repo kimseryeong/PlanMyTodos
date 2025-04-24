@@ -7,18 +7,25 @@ export const SessionProvider = ({ children }) => {
 
     const fetchSession = async () => {
 
-        await fetch('https://planmytodos-api-production.up.railway.app/user/me', {
+        try {
+            const response = await fetch('https://planmytodos-api-production.up.railway.app/user/me', {
                 method: 'GET',
-                credentials: 'include',
+                credentials: "include",
             })
-            .then(res => {
-                if(!res.ok) console.error('fail to get session');
-                res.json()
-            })
-            .then(data => {
+
+            if(response.ok){
+                const data = await response.json();
                 setSession(data);
-            })
-            .catch(error => console.log(error))
+            }
+            else{
+                setSession(null);
+            }
+
+        }
+        catch(error){
+            console.error('fail to get session', error);
+            setSession(null);
+        }
     }
 
     useEffect(() => {
