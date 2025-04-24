@@ -3,10 +3,7 @@ import Login from './Login';
 import Signup from './Signup';
 import CmButton from './Common/CmButton';
 import styled from 'styled-components';
-
-import { useRecoilState } from 'recoil';
-import { userState } from '../lib/atom';
-import { supabase } from '../lib/supabaseClient';
+import { useSession } from './SessionProvider';
 
 const HeaderStyle = styled.div`
     width: 100%;
@@ -33,16 +30,17 @@ const EmailStyle = styled.span`
 
 const Header = () => {
 
-    const [userInfo, setUserInfo] = useRecoilState(userState);
+    const { session, fetchSession } = useSession();
+    console.log('Header session > ', session);
 
     //logout
     const onLogout = async () => {
-        const { error } = await supabase.auth.signOut();
+    //     const { error } = await supabase.auth.signOut();
 
-        setUserInfo(null);
+    //     setUserInfo(null);
         
-        if(error) console.log('error: ', error);
-        alert('로그아웃 되었습니다.');
+    //     if(error) console.log('error: ', error);
+    //     alert('로그아웃 되었습니다.');
     }
 
     
@@ -50,9 +48,9 @@ const Header = () => {
     return (
         <HeaderStyle>
             <Buttons>
-                {userInfo ? 
+                {session ? 
                 <>
-                    <EmailStyle>{ userInfo.user.email }</EmailStyle>
+                    <EmailStyle>{ session }</EmailStyle>
                     <CmButton action={onLogout} name={'Logout'}></CmButton>
                 </>
                 :
