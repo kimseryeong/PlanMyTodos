@@ -16,7 +16,7 @@ export const SessionProvider = ({ children }) => {
                 res.json()
             })
             .then(data => {
-                setSession(data.email);
+                setSession(data);
             })
             .catch(error => console.log(error))
     }

@@ -50,7 +50,7 @@ const Header = () => {
             <Buttons>
                 {session ? 
                 <>
-                    <EmailStyle>{ session }</EmailStyle>
+                    <EmailStyle>{ session.email }</EmailStyle>
                     <CmButton action={onLogout} name={'Logout'}></CmButton>
                 </>
                 :
