@@ -24,8 +24,9 @@ const Buttons = styled.div`
 `;
 
 const EmailStyle = styled.span`
-    font-size: 20px;
-    background-color: #EAF2F8;
+    font-size: 18px;
+    margin-right: 5px;
+    //background-color: #EAF2F8;
 `;
 
 const Header = () => {
