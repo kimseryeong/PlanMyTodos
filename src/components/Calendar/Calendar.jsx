@@ -14,9 +14,10 @@ import { MdDelete } from "react-icons/md";
 import { CmScrollStyle } from '../Common/CmScrollStyle';
 import CmButton from '../Common/CmButton';
 import { FullCalendarStyle } from './FullcalendarStyle'
-import { dateState, todoState, userUuid } from '../../lib/atom';
+import { dateState, todoState } from '../../lib/atom';
 import { useEffect, useState} from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { useSession } from '../SessionProvider';
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -140,7 +141,8 @@ const IconBlock = styled.div`
 `;
 
 export default function Calendar () {
-    const uuid = useRecoilValue(userUuid);
+    const { session, fetchSession } = useSession();
+    const uuid = session ? session.id : null;
     const [newTodoTitle, setNewTodoTitle] = useState('');
     const [newTodoContent, setNewTodoContent] = useState('');
     const [date, setDate] = useRecoilState(dateState);

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 
 import { CmScrollStyle } from '../Common/CmScrollStyle';
 import { supabase } from '../../lib/supabaseClient';
-import { dateState, todoState, loadingState, userUuid } from '../../lib/atom';
+import { dateState, todoState, loadingState } from '../../lib/atom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useSession } from '../SessionProvider';
 
 const TodoListStyle = styled.div`
     overflow-y: auto;
@@ -39,7 +40,8 @@ const loadTodoList = async (uuid, date, setTodoList, setLoading, setError) => {
 }
 
 function TodoList (){
-    const uuid = useRecoilValue(userUuid);
+    const { session, fetchSession } = useSession();
+    const uuid = session ? session.id : null;
     const date = useRecoilValue(dateState);
     const [todoList, setTodoList] = useRecoilState(todoState);
     const [error, setError] = useState(null);

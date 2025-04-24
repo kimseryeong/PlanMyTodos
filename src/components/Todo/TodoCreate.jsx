@@ -5,7 +5,7 @@ import { MdAdd } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { supabase } from '../../lib/supabaseClient';
-import { dateState, todoState, errorState, userUuid } from '../../lib/atom';
+import { dateState, todoState, errorState } from '../../lib/atom';
 import Loading from '../../Loading';
 import CmButton from '../Common/CmButton';
 import { CmScrollStyle } from '../Common/CmScrollStyle'
