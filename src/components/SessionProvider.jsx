@@ -6,27 +6,19 @@ export const SessionProvider = ({ children }) => {
     const [session, setSession] = useState(null);
 
     const fetchSession = async () => {
-        try {
-            const response = await fetch('https://planmytodos-api-production.up.railway.app/user/me', {
+
+        await fetch('https://planmytodos-api-production.up.railway.app/user/me', {
                 method: 'GET',
-                credentials: "include",
+                credentials: 'include',
             })
-
-            if(response.ok){
-                const data = await response.json();
-                setSession(data);
-            }
-            else{
-                setSession(null);
-            }
-
-            console.log('success to fetch session, userEmail > ', session)
-
-        }
-        catch(error){
-            console.error('fail to get session', error);
-            setSession(null);
-        }
+            .then(res => {
+                if(!res.ok) console.error('fail to get session');
+                res.json()
+            })
+            .then(data => {
+                setSession(data.email);
+            })
+            .catch(error => console.log(error))
     }
 
     useEffect(() => {
