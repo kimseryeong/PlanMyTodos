@@ -105,7 +105,8 @@ const Buttons = styled.div`
 export default function TodoCreate(){
     const { session, fetchSession } = useSession();
     const uuid = session ? session.id : null;
-    const date = useRecoilValue(dateState);
+    const email = session ? session.email : null;
+    const date = new Date();//useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
     const [loading, setLoading] = useState(false);
     
@@ -126,22 +127,40 @@ export default function TodoCreate(){
         
         closeModal();
         
-        const {data, error} = await supabase
-            .from('todolist')
-            .insert([
-                {
-                    id: uuid, 
-                    title: todoTitle, 
-                    content: todoContent, 
-                    start_date: date,
-                    complete_state: 'N', 
-                }
-            ])
-            .select('idx, title, content, complete_state, start_date')
-        
-        if(error) console.log('onCreateTodo 데이터 삽입 중 에러 발생 !!! ');
+        const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/createTodo`;
+        const fetchParams = {
+            email: email,
+            title: todoTitle,
+            content: todoContent, 
+            startAt: date,
+            endAt: date,
+        }
+        await fetch(fetchUrl, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify(fetchParams),
+        })
+        .then(res => res.json())
+        .then(data => {   
+            console.log('create data > ', data);
+        })
 
-        setTodoList((prev) => [data[0], ...prev]);
+        // const {data, error} = await supabase
+        //     .from('todolist')
+        //     .insert([
+        //         {
+        //             id: uuid, 
+        //             title: todoTitle, 
+        //             content: todoContent, 
+        //             start_date: date,
+        //             complete_state: 'N', 
+        //         }
+        //     ])
+        //     .select('idx, title, content, complete_state, start_date')
+        
+        // if(error) console.log('onCreateTodo 데이터 삽입 중 에러 발생 !!! ');
+
+        // setTodoList((prev) => [data[0], ...prev]);
 
         setLoading(false);
         
