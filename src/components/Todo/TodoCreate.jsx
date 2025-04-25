@@ -104,7 +104,7 @@ const Buttons = styled.div`
 
 export default function TodoCreate(){
     const { session, fetchSession } = useSession();
-    const uuid = session ? session.id : null;
+    const uuid = 'd'//session ? session.id : null;
     const email = session ? session.email : null;
     const date = new Date();//useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
@@ -127,9 +127,9 @@ export default function TodoCreate(){
         
         closeModal();
         
-        const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/createTodo`;
+        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/createTodo';
         const fetchParams = {
-            email: email,
+            email: 'kxxoo322@gmail.com',
             title: todoTitle,
             content: todoContent, 
             startAt: date,
@@ -138,11 +138,15 @@ export default function TodoCreate(){
         await fetch(fetchUrl, {
             method: 'POST',
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
             body: JSON.stringify(fetchParams),
         })
         .then(res => res.json())
         .then(data => {   
             console.log('create data > ', data);
+            setTodoList((prev) => [data, ...prev]);
         })
 
         // const {data, error} = await supabase

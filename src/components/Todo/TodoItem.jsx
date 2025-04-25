@@ -185,7 +185,9 @@ const style = {
     }
 }
 
-function TodoItem ({title, content, idx, done, uuid}) {
+function TodoItem ({title, content, done, email}) {
+    console.log('TodoItem', title);
+    
     const setTodoList = useSetRecoilState(todoState);
     const [newTodoTitle, setNewTodoTitle] = useState(title);
     const [newTodoContent, setNewTodoContent] = useState(content);
@@ -211,16 +213,16 @@ function TodoItem ({title, content, idx, done, uuid}) {
 
         onClose();
 
-        const { data, error } = await supabase
-            .from('todolist')
-            .update({ title: newTodoTitle, content: newTodoContent })
-            .eq('id', uuid)
-            .eq('idx', idx)
-            .select('idx, title, content, complete_state, start_date')
+        // const { data, error } = await supabase
+        //     .from('todolist')
+        //     .update({ title: newTodoTitle, content: newTodoContent })
+        //     .eq('id', uuid)
+        //     .eq('idx', idx)
+        //     .select('idx, title, content, complete_state, start_date')
 
-        if(error) console.log(error);
+        // if(error) console.log(error);
 
-        setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
+        // setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
         // setLoading(false);
     }
 
@@ -228,15 +230,15 @@ function TodoItem ({title, content, idx, done, uuid}) {
     const onDelete = async () => {
         // setLoading(true);
 
-        const { data, error } = await supabase
-            .from('todolist')
-            .delete()
-            .eq('id', uuid)
-            .eq('idx', idx)
+        // const { data, error } = await supabase
+        //     .from('todolist')
+        //     .delete()
+        //     .eq('id', uuid)
+        //     .eq('idx', idx)
 
-        if(error) console.log(error);
+        // if(error) console.log(error);
         
-        setTodoList((prev) => prev.filter(t => t.idx !== idx));
+        // setTodoList((prev) => prev.filter(t => t.idx !== idx));
 
         // setLoading(false);
     }
@@ -245,24 +247,24 @@ function TodoItem ({title, content, idx, done, uuid}) {
     const onCheck = async () => {
         // setLoading(true);
 
-        const { data, error } = await supabase
-            .from('todolist')
-            .update({complete_state: !done})
-            .eq('idx', idx)
-            .select('idx, title, content, complete_state, start_date')
+        // const { data, error } = await supabase
+        //     .from('todolist')
+        //     .update({complete_state: !done})
+        //     .eq('idx', idx)
+        //     .select('idx, title, content, complete_state, start_date')
 
-        if(error) console.log(' 완료체크 중 실패 > ' , error);
+        // if(error) console.log(' 완료체크 중 실패 > ' , error);
 
-        const {data: todos, error: todosError} = await supabase.from('todolist')
-            .select('idx, title, content, complete_state, start_date')
-            .eq('id', uuid)
-            .eq('start_date', data[0].start_date)
-            .order('complete_state', { decending: false })
+        // const {data: todos, error: todosError} = await supabase.from('todolist')
+        //     .select('idx, title, content, complete_state, start_date')
+        //     .eq('id', uuid)
+        //     .eq('start_date', data[0].start_date)
+        //     .order('complete_state', { decending: false })
 
 
-        if(todosError) console.log('완료 처리 후 투두리스트 fetch 실패', todosError);
+        // if(todosError) console.log('완료 처리 후 투두리스트 fetch 실패', todosError);
 
-        setTodoList(todos);
+        // setTodoList(todos);
 
         
         // setLoading(false);

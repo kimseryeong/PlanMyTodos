@@ -17,17 +17,25 @@ const TodoListStyle = styled.div`
 
 const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) => {
 
-    const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/fetchTodosByDate?email=${encodeURIComponent(userEmail)}&date=${encodeURIComponent(date)}`;
-
+    const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/fetchTodosByDate`;
+    const fetchParams = {
+        email: userEmail,
+        currentAt: date,
+    }
     setLoading(true);
 
     await fetch(fetchUrl, {
-        method: 'GET'
+        method: 'POST'
         ,credentials: 'include'
+        , headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+        ,body: JSON.stringify(fetchParams)
     })
     .then(res => res.json())
     .then(data => {   
-        console.log('fetchAllTodos res > ', data);
+        console.log('fetchTodosByDate res > ', data);
+        setTodoList(data);
     })
 
 
@@ -36,7 +44,7 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
 
 
     // setLoading(true);
-    // const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/fetchAllTodos?userEmail=' + userEmail + '&date=' + date;
+    // const fetchUrl = '/todo/fetchAllTodos?userEmail=' + userEmail + '&date=' + date;
 
     // await fetch(fetchUrl, {
     //     method: 'GET',
@@ -72,7 +80,7 @@ function TodoList (){
     const uuid = session ? session.id : null;
     const userEmail = session ? session.email : null;
 
-    const date = new Date().toISOString();//useRecoilValue(dateState);
+    const date = useRecoilValue(dateState);
     const [todoList, setTodoList] = useRecoilState(todoState);
     const [error, setError] = useState(null);
     const setLoading = useSetRecoilState(loadingState);
@@ -81,24 +89,20 @@ function TodoList (){
         if(!userEmail) return;
 
         loadTodoList(userEmail, date, setTodoList, setLoading, setError);
-    }, [userEmail, date])
-
-    // if (error) {
-    //     return <div>{error}</div>;
-    // }
+    }, [])
 
     return (
         <TodoListStyle>
 
-            {/* { userEmail && todoList && todoList.map((v, i) => <TodoItem key={i} 
+            { userEmail && todoList && todoList.map((v, i) => <TodoItem key={i} 
                     title={v.title} 
                     content = {v.content}
-                    idx={v.idx} 
-                    done={v.complete_state} 
-                    uuid={uuid}/>
+                    //idx={v.idx} 
+                    done={v.completed} 
+                    email={userEmail}/>
                 )
                 
-            } */}
+            }
         </TodoListStyle>
     );
 }
