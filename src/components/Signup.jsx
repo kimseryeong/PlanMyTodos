@@ -1,6 +1,7 @@
 import CmButton from './Common/CmButton';
 import CmErrorMsg from './Common/CmErrorMsg';
 import { supabase } from '../lib/supabaseClient';
+import axios from 'axios';
 
 import React, { useState } from 'react';
 import Modal from 'react-modal';
@@ -77,24 +78,34 @@ const Signup = ({children}) => {
     //signup form submit
     const { register, handleSubmit, reset, formState: {errors}, getValues } = useForm();
     const onSubmit = async (inputs) => {
-        
-        //supabase email signup
-        const {data, error} = await supabase.auth.signUp({
-            email: inputs.email,
-            password: inputs.password,
-            options: {data: {password: inputs.password}}
-        })
+        try{
+            const res = await axios.post('https://planmytodos-api-production.up.railway.app/user/signup', inputs, {
+                withCredentials: true,
+            });
 
-        if(error){
-            if(error.status === 422){
-                alert('이미 등록된 사용자입니다.');
-            }
-            else{
-                alert('문제가 발생하였습니다. 다시 시도하십시오.');
-            }
-            return;
+            console.log('signup res', res)
         }
-        alert('성공적으로 회원가입 완료되었습니다.');
+        catch (error) {
+            console.error("axios signup 실패", error);
+            
+        }
+        //supabase email signup
+        // const {data, error} = await supabase.auth.signUp({
+        //     email: inputs.email,
+        //     password: inputs.password,
+        //     options: {data: {password: inputs.password}}
+        // })
+
+        // if(error){
+        //     if(error.status === 422){
+        //         alert('이미 등록된 사용자입니다.');
+        //     }
+        //     else{
+        //         alert('문제가 발생하였습니다. 다시 시도하십시오.');
+        //     }
+        //     return;
+        // }
+        // alert('성공적으로 회원가입 완료되었습니다.');
     }
     
     return (
