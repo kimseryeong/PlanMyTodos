@@ -1,25 +1,24 @@
-const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
+import { useSetRecoilState } from "recoil";
+import { loadingState, todoState } from "../lib/atom";
 
-export const postFetch = async ( endpoint, body, options ) => {
-    try {
-        const res = await fetch(`${BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                credentials: 'include',
-                ...(options.headers || {}),
-            },
-            body: JSON.stringify(body),
-            ...options,
-        })
-        if(!res.ok){
-            const error = await res.json();
+export const cmFetchPost = async ( fetchUrl, fetchParams ) => {
+
+    const res = await fetch(fetchUrl, {
+        method: 'POST'
+        ,credentials: 'include'
+        , headers: {
+            'Content-Type': 'application/json; charset=utf-8'
         }
+        ,body: JSON.stringify(fetchParams)
+    })
 
-        return res.json();
+    if(!res.ok){
+        console.error('cmFetchPost error !! ');
+        return;
     }
-    catch(error){
-        console.error('[POST Fetch] 실패');
-        throw error;
-    }
+    
+    const data = await res.json();
+
+    return data;
 }
+

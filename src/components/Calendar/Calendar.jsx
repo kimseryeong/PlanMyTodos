@@ -16,8 +16,8 @@ import CmButton from '../Common/CmButton';
 import { FullCalendarStyle } from './FullcalendarStyle'
 import { dateState, todoState } from '../../lib/atom';
 import { useEffect, useState} from 'react';
-import { supabase } from '../../lib/supabaseClient';
 import { useSession } from '../SessionProvider';
+import { cmFetchPost } from '../../api/common';
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -142,14 +142,14 @@ const IconBlock = styled.div`
 
 export default function Calendar () {
     const { session, fetchSession } = useSession();
-    const uuid = session ? session.id : null;
+    const userEmail = session ? session.email : null;
     const [newTodoTitle, setNewTodoTitle] = useState('');
     const [newTodoContent, setNewTodoContent] = useState('');
     const [date, setDate] = useRecoilState(dateState);
-    const [error, setError] = useState(null);
     const [todoList, setTodoList] = useRecoilState(todoState);
     const [isOpen, setIsOpen] = useState(false);
     const [event, setEvent] = useState([]);
+    
     const isClose = () => {
         setIsOpen(false);
         setIsEdit(false);
@@ -158,42 +158,41 @@ export default function Calendar () {
 
     const [calEvents, setCalEvents] = useState([]);
     useEffect(()=>{
-        if(!uuid) {
+        if(!userEmail) {
             setCalEvents([]);
             return;
         }
 
         const loadEvents = async () => {
-            const {data, error} = await supabase.from('todolist')
-                .select('idx, title, content, complete_state, start_date')
-                .eq('id', uuid)
-                .order('complete_state', false)
-
-            if(error) setError('캘린더 이벤트 로드 중 에러 발생');
-
-            // console.log('초기 데이터 > ', data);
+            
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/fetchAllTodos';
+            const fetchParams = {
+                email: userEmail
+            }
+            const data = await cmFetchPost(fetchUrl, fetchParams);
 
             const events = data.reduce((acc, todo)=> {
+                const startDate = `${todo.startAt[0]}-${String(todo.startAt[1]).padStart(2, '0')}-${todo.startAt[2]}`
                 const event = {
                     title: todo.title,
-                    id: `${todo.start_date}_${todo.idx}`, 
-                    start: todo.start_date, 
+                    id: todo.id, 
+                    start: startDate,
                     backgroundColor: '#bee0f5',
                     fontSize: '12px',
-                    className: todo.complete_state ? 'cmpltTodos' : '',
+                    className: todo.completed ? 'cmpltTodos' : '',
                     description: todo.content,
                 };
+                
                 acc.push(event);
                 return acc;
             }, [])
-            
-            console.log('파싱 후 데이터 > ', events);
 
             setCalEvents(events);
         }
+        
         loadEvents();
 
-    }, [uuid, todoList])
+    }, [userEmail, todoList])
     
     
     //날짜 상태관리
@@ -211,31 +210,35 @@ export default function Calendar () {
         setIsOpen(true);
 
         console.log('event > ', data.event);
-        const title = data.event._def.title;
-        const [date, idx] = data.event._def.publicId.split('_');
-        const content = data.event._def.extendedProps.description;
 
-        setEvent([title, date, idx, content]);
+        const title = data.event._def.title;
+        const content = data.event._def.extendedProps.description;
+        const startDate = data.event.startStr;
+        const id = data.event._def.publicId;
+
+        setEvent([title, startDate, id, content]);
         setNewTodoTitle(title);
         setNewTodoContent(content);
     }  
     
     //이벤트 삭제
     const onDelete = async () => {
-        console.log('onDelete [todo, date, idx] > ', event);
-        console.log(uuid, Number(event[2]));
+        
 
-        const { data, error } = await supabase
-            .from('todolist')
-            .delete()
-            .eq('id', uuid)
-            .eq('idx', Number(event[2]))
-            .select('idx, title, start_date')
+        console.log('onDelete [title, startAt, id, content] > ', event);
+        
+        console.log(userEmail);
 
-        if(error) console.log(error);
+        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/deleteTodo';
+        const fetchParams = {
+            id: Number(event[2]),
+            email: userEmail,
+        }
 
+        const data = await cmFetchPost(fetchUrl, fetchParams);
+        setTodoList(data);
+        
         isClose();
-        setTodoList((prev) => prev.filter(t => t.idx !== Number(event[2])));
     }
 
     //이벤트 수정
@@ -247,16 +250,19 @@ export default function Calendar () {
     const onUpdate = async () => {
 
         if(isEdit){
-            const { data, error } = await supabase
-                .from('todolist')
-                .update({ title: newTodoTitle, content: newTodoContent })
-                .eq('id', uuid)
-                .eq('idx', Number(event[2]))
-                .select('idx, title, content, complete_state, start_date')
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
+            const fetchParams = {
+                id: Number(event[2]),
+                email: userEmail,
+                title: newTodoTitle,
+                content: newTodoContent,
+                
+            }
+    
+            const data = await cmFetchPost(fetchUrl, fetchParams);
+    
+            setTodoList((prev) => prev.map(t => t.id === data.id ? data : t));
             
-            if(error) console.log(error);
-
-            setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
             isClose();
         }
     }

@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import { MdAdd } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { supabase } from '../../lib/supabaseClient';
 import { dateState, todoState, errorState } from '../../lib/atom';
 import Loading from '../../Loading';
 import CmButton from '../Common/CmButton';
 import { CmScrollStyle } from '../Common/CmScrollStyle'
 import { useSession } from '../SessionProvider'
+import { cmFetchPost } from '../../api/common';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -105,7 +105,7 @@ const Buttons = styled.div`
 export default function TodoCreate(){
     const { session, fetchSession } = useSession();
     const email = session ? session.email : null;
-    const date = new Date();//useRecoilValue(dateState);
+    const date = useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
     const [loading, setLoading] = useState(false);
     
@@ -134,36 +134,9 @@ export default function TodoCreate(){
             startAt: date,
             endAt: date,
         }
-        await fetch(fetchUrl, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: JSON.stringify(fetchParams),
-        })
-        .then(res => res.json())
-        .then(data => {   
-            console.log('create data > ', data);
-            setTodoList((prev) => [data, ...prev]);
-        })
+        const data = await cmFetchPost(fetchUrl, fetchParams);
 
-        // const {data, error} = await supabase
-        //     .from('todolist')
-        //     .insert([
-        //         {
-        //             id: uuid, 
-        //             title: todoTitle, 
-        //             content: todoContent, 
-        //             start_date: date,
-        //             complete_state: 'N', 
-        //         }
-        //     ])
-        //     .select('idx, title, content, complete_state, start_date')
-        
-        // if(error) console.log('onCreateTodo 데이터 삽입 중 에러 발생 !!! ');
-
-        // setTodoList((prev) => [data[0], ...prev]);
+        setTodoList((prev) => [data, ...prev]);
 
         setLoading(false);
         

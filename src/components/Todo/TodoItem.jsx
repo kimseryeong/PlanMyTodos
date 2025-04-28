@@ -5,14 +5,12 @@ import { AiFillEdit } from "react-icons/ai";
 
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 
 import { CmScrollStyle } from '../Common/CmScrollStyle';
 import CmButton from '../Common/CmButton';
-import { supabase } from '../../lib/supabaseClient';
-import { todoState, loadingState } from '../../lib/atom'
-
-import { postFetch } from '../../api/common';
+import { todoState, loadingState, dateState } from '../../lib/atom'
+import { cmFetchPost } from '../../api/common';
 
 const Hover = styled.div`
     display: flex;
@@ -187,9 +185,8 @@ const style = {
     }
 }
 
-function TodoItem ({title, content, done, email, id}) {
-    console.log('TodoItem', title);
-    
+function TodoItem ({id, title, content, done, startAt, endAt, email}) {
+    const date = useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
     const [newTodoTitle, setNewTodoTitle] = useState(title);
     const [newTodoContent, setNewTodoContent] = useState(content);
@@ -211,75 +208,61 @@ function TodoItem ({title, content, done, email, id}) {
 
     //수정
     const onUpdate = async () => {
-        // setLoading(true);
+        setLoading(true);
 
         onClose();
 
-        // const fetchUrl = '/todo/updateTodo';
-        // const fetchParams = {
-        //     id: id,
-        //     email: email,
-        //     title: newTodoTitle,
-        //     content: newTodoContent
-        // }
-        // const response = postFetch(fetchUrl, fetchParams);
-        // console.log('onUpdate res > ', response);
+        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
+        const fetchParams = {
+            id: id,
+            email: email,
+            title: newTodoTitle,
+            content: newTodoContent,
+            startAt: startAt,
+            endAt: endAt
+        }
 
-        // const { data, error } = await supabase
-        //     .from('todolist')
-        //     .update({ title: newTodoTitle, content: newTodoContent })
-        //     .eq('id', uuid)
-        //     .eq('idx', idx)
-        //     .select('idx, title, content, complete_state, start_date')
+        const data = await cmFetchPost(fetchUrl, fetchParams);
 
-        // if(error) console.log(error);
-
-        // setTodoList((prev) => prev.map(t => t.idx === data[0].idx ? data[0] : t));
-        // setLoading(false);
+        setTodoList((prev) => prev.map(t => t.id === data.id ? data : t));
+        
+        setLoading(false);
     }
 
     //삭제
     const onDelete = async () => {
-        // setLoading(true);
+        setLoading(true);
 
-        // const { data, error } = await supabase
-        //     .from('todolist')
-        //     .delete()
-        //     .eq('id', uuid)
-        //     .eq('idx', idx)
+        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/deleteTodo';
+        const fetchParams = {
+            id: id,
+            email: email,
+            currentAt: date
+        }
 
-        // if(error) console.log(error);
-        
-        // setTodoList((prev) => prev.filter(t => t.idx !== idx));
+        const data = await cmFetchPost(fetchUrl, fetchParams);
 
-        // setLoading(false);
+        setTodoList(data);
+
+        setLoading(false);
     }
 
     //완료체크
     const onCheck = async () => {
-        // setLoading(true);
+        setLoading(true);
 
-        // const { data, error } = await supabase
-        //     .from('todolist')
-        //     .update({complete_state: !done})
-        //     .eq('idx', idx)
-        //     .select('idx, title, content, complete_state, start_date')
+        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
+        const fetchParams = {
+            id: id,
+            email: email,
+            completed: !done
+        }
 
-        // if(error) console.log(' 완료체크 중 실패 > ' , error);
+        const data = await cmFetchPost(fetchUrl, fetchParams);
 
-        // const {data: todos, error: todosError} = await supabase.from('todolist')
-        //     .select('idx, title, content, complete_state, start_date')
-        //     .eq('id', uuid)
-        //     .eq('start_date', data[0].start_date)
-        //     .order('complete_state', { decending: false })
+        setTodoList((prev) => prev.map(t => t.id === data.id ? data : t));
 
-
-        // if(todosError) console.log('완료 처리 후 투두리스트 fetch 실패', todosError);
-
-        // setTodoList(todos);
-
-        
-        // setLoading(false);
+        setLoading(false);
     }
 
 
