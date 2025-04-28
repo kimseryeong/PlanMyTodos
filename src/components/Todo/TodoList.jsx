@@ -17,12 +17,12 @@ const TodoListStyle = styled.div`
 
 const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) => {
 
+    setLoading(true);
     const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/fetchTodosByDate`;
     const fetchParams = {
         email: userEmail,
         currentAt: date,
     }
-    setLoading(true);
 
     await fetch(fetchUrl, {
         method: 'POST'
@@ -44,16 +44,7 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
 
 
     // setLoading(true);
-    // const fetchUrl = '/todo/fetchAllTodos?userEmail=' + userEmail + '&date=' + date;
 
-    // await fetch(fetchUrl, {
-    //     method: 'GET',
-    //     credentials: "include",
-    // })
-    // .then(res => {
-    //     console.log('fetchAllTodos res > ', res);
-    //     setTodoList(res);
-    // })
     // const {data, error} = await supabase.from('todolist')
     //     .select('idx, title, content, start_date, complete_state')
     //     .eq('id', uuid)
@@ -78,8 +69,10 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
 function TodoList (){
     const { session, fetchSession } = useSession();
     const userEmail = session ? session.email : null;
-
     const date = useRecoilValue(dateState);
+
+    console.log('TodoList userEmail, date: ', userEmail, date);
+
     const [todoList, setTodoList] = useRecoilState(todoState);
     const [error, setError] = useState(null);
     const setLoading = useSetRecoilState(loadingState);
