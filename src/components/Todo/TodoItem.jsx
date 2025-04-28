@@ -215,15 +215,15 @@ function TodoItem ({title, content, done, email, id}) {
 
         onClose();
 
-        const fetchUrl = '/todo/updateTodo';
-        const fetchParams = {
-            id: id,
-            email: email,
-            title: newTodoTitle,
-            content: newTodoContent
-        }
-        const response = postFetch(fetchUrl, fetchParams);
-        console.log('onUpdate res > ', response);
+        // const fetchUrl = '/todo/updateTodo';
+        // const fetchParams = {
+        //     id: id,
+        //     email: email,
+        //     title: newTodoTitle,
+        //     content: newTodoContent
+        // }
+        // const response = postFetch(fetchUrl, fetchParams);
+        // console.log('onUpdate res > ', response);
 
         // const { data, error } = await supabase
         //     .from('todolist')
