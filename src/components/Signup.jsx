@@ -1,6 +1,5 @@
 import CmButton from './Common/CmButton';
 import CmErrorMsg from './Common/CmErrorMsg';
-import { supabase } from '../lib/supabaseClient';
 import axios from 'axios';
 
 import React, { useState } from 'react';
@@ -89,23 +88,6 @@ const Signup = ({children}) => {
             console.error("axios signup 실패", error);
             
         }
-        //supabase email signup
-        // const {data, error} = await supabase.auth.signUp({
-        //     email: inputs.email,
-        //     password: inputs.password,
-        //     options: {data: {password: inputs.password}}
-        // })
-
-        // if(error){
-        //     if(error.status === 422){
-        //         alert('이미 등록된 사용자입니다.');
-        //     }
-        //     else{
-        //         alert('문제가 발생하였습니다. 다시 시도하십시오.');
-        //     }
-        //     return;
-        // }
-        // alert('성공적으로 회원가입 완료되었습니다.');
     }
     
     return (

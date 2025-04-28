@@ -1,5 +1,3 @@
-import { supabase } from '../lib/supabaseClient';
-
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
@@ -140,19 +138,7 @@ const Login = ({children}) => {
             console.error("axios 로그인 실패", error);
             
         }
-        // const {data, error} = await supabase.auth.signInWithPassword({
-        //     email: inputs.email,
-        //     password: inputs.password,
-        // })
 
-        // if(error){
-        //     if(error.status === 400){
-        //         alert('로그인 정보가 올바르지 않습니다.')
-        //     }
-        //     else{
-        //         alert('문제가 발생하였습니다. 다시 시도하십시오.');
-        //     }
-        // }
     }
 
 
