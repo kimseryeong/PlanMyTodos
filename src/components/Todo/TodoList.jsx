@@ -94,11 +94,11 @@ function TodoList (){
     const userEmail = session ? session.email : null;
     const date = useRecoilValue(dateState);
 
-    console.log('TodoList userEmail, date: ', userEmail, date);
-
+    
     const [todoList, setTodoList] = useState(null);
-
+    
     useEffect(() => {
+        console.log('TodoList userEmail, date: ', userEmail, date);
         fetchTodoList(userEmail, date, setTodoList);
 
         console.log(todoList);
