@@ -1,6 +1,6 @@
 # IT's My Plan - PlanMyTodos
 
-### React 프론트엔드 스터디 [05.06 - 06.28]
+### React 프론트엔드 스터디 [24.05.06 - 24.06.28]
 
 <br>
 
