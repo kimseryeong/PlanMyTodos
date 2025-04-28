@@ -104,7 +104,6 @@ const Buttons = styled.div`
 
 export default function TodoCreate(){
     const { session, fetchSession } = useSession();
-    const uuid = 'd'//session ? session.id : null;
     const email = session ? session.email : null;
     const date = new Date();//useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
@@ -129,7 +128,7 @@ export default function TodoCreate(){
         
         const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/createTodo';
         const fetchParams = {
-            email: 'kxxoo322@gmail.com',
+            email: email,
             title: todoTitle,
             content: todoContent, 
             startAt: date,
@@ -172,7 +171,7 @@ export default function TodoCreate(){
 
     return (
         <>
-            {uuid ? 
+            {email ? 
             <CreateItem onClick={onModal} ><MdAdd />할 일 추가</CreateItem> 
             : <div>로그인 후 이용 가능합니다.</div>
             }

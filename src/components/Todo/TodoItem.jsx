@@ -12,6 +12,8 @@ import CmButton from '../Common/CmButton';
 import { supabase } from '../../lib/supabaseClient';
 import { todoState, loadingState } from '../../lib/atom'
 
+import { postFetch } from '../../api/common';
+
 const Hover = styled.div`
     display: flex;
     align-items: center;
@@ -185,7 +187,7 @@ const style = {
     }
 }
 
-function TodoItem ({title, content, done, email}) {
+function TodoItem ({title, content, done, email, id}) {
     console.log('TodoItem', title);
     
     const setTodoList = useSetRecoilState(todoState);
@@ -212,6 +214,16 @@ function TodoItem ({title, content, done, email}) {
         // setLoading(true);
 
         onClose();
+
+        const fetchUrl = '/todo/updateTodo';
+        const fetchParams = {
+            id: id,
+            email: email,
+            title: newTodoTitle,
+            content: newTodoContent
+        }
+        const response = postFetch(fetchUrl, fetchParams);
+        console.log('onUpdate res > ', response);
 
         // const { data, error } = await supabase
         //     .from('todolist')

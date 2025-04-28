@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import CmButton from './Common/CmButton';
 import CmErrorMsg from './Common/CmErrorMsg';
 import { ReactSVG } from "react-svg";
+import axios from "axios";
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -103,7 +104,16 @@ const Buttons = styled.div`
     margin-top: 20px;
 `;
 
+const getCsrfToken = () => {
+    const matches = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+
+    return matches ? decodeURIComponent(matches[1]) : null;
+}
+
 const Login = ({children}) => {
+
+    const csrfToken = getCsrfToken();
+
     //login modal 
     const [loginOpen, setLoginOpen] = useState(false);
     const loginClick = () => setLoginOpen(true);
@@ -118,40 +128,33 @@ const Login = ({children}) => {
     //login form submit
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
     const onSubmit = async (inputs) => {
+        
 
-        const {data, error} = await supabase.auth.signInWithPassword({
-            email: inputs.email,
-            password: inputs.password,
-        })
-
-        if(error){
-            if(error.status === 400){
-                alert('로그인 정보가 올바르지 않습니다.')
-            }
-            else{
-                alert('문제가 발생하였습니다. 다시 시도하십시오.');
-            }
+        try{
+            const res = await axios.post('https://planmytodos-api-production.up.railway.app/user/login', inputs, {
+                withCredentials: true,
+            });
+            console.log("axios 로그인 성공!", res.data);
         }
+        catch (error) {
+            console.error("axios 로그인 실패", error);
+            
+        }
+        // const {data, error} = await supabase.auth.signInWithPassword({
+        //     email: inputs.email,
+        //     password: inputs.password,
+        // })
+
+        // if(error){
+        //     if(error.status === 400){
+        //         alert('로그인 정보가 올바르지 않습니다.')
+        //     }
+        //     else{
+        //         alert('문제가 발생하였습니다. 다시 시도하십시오.');
+        //     }
+        // }
     }
 
-
-    //google login
-    const onGoogleLogin = async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                queryParams: {
-                    access_type: 'offline',
-                    prompt: 'consent',
-                },
-            }
-        })
-    
-        if(error){
-            console.log('supabase 구글 로그인 에러: ', error);
-            return;
-        }
-    }
 
 
     return (

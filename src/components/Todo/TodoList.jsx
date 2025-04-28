@@ -77,7 +77,6 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
 
 function TodoList (){
     const { session, fetchSession } = useSession();
-    const uuid = session ? session.id : null;
     const userEmail = session ? session.email : null;
 
     const date = useRecoilValue(dateState);
@@ -97,11 +96,11 @@ function TodoList (){
             { userEmail && todoList && todoList.map((v, i) => <TodoItem key={i} 
                     title={v.title} 
                     content = {v.content}
-                    //idx={v.idx} 
                     done={v.completed} 
-                    email={userEmail}/>
+                    email={userEmail}
+                    id={v.id}
+                    />
                 )
-                
             }
         </TodoListStyle>
     );
