@@ -66,6 +66,29 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
 
 }
 
+const fetchTodoList = async (userEmail, date, setTodoList) => {
+    const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/fetchTodosByDate`;
+    const fetchParams = {
+        email: userEmail,
+        currentAt: date,
+    }
+
+    await fetch(fetchUrl, {
+        method: 'POST'
+        ,credentials: 'include'
+        , headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+        ,body: JSON.stringify(fetchParams)
+    })
+    .then(res => res.json())
+    .then(data => {   
+        console.log('fetchTodosByDate res > ', data);
+        setTodoList(data);
+    })
+}
+
+
 function TodoList (){
     const { session, fetchSession } = useSession();
     const userEmail = session ? session.email : null;
@@ -73,15 +96,24 @@ function TodoList (){
 
     console.log('TodoList userEmail, date: ', userEmail, date);
 
-    const [todoList, setTodoList] = useRecoilState(todoState);
-    const [error, setError] = useState(null);
+    const [todoList, setTodoList] = useState(null);
+
+    useEffect(() => {
+        fetchTodoList(userEmail, date, setTodoList);
+
+        console.log(todoList);
+    }, [userEmail, date])
+
+
+    //useRecoilState(todoState);
+    //const [error, setError] = useState(null);
     const setLoading = useSetRecoilState(loadingState);
     
-    useEffect(()=>{
-        if(!userEmail) return;
+    // useEffect(()=>{
+    //     if(!userEmail) return;
 
-        loadTodoList(userEmail, date, setTodoList, setLoading, setError);
-    }, [])
+    //     loadTodoList(userEmail, date, setTodoList, setLoading, setError);
+    // }, [userEmail, date])
 
     return (
         <TodoListStyle>
