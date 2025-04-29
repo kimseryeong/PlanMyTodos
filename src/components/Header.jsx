@@ -4,7 +4,7 @@ import Signup from './Signup';
 import CmButton from './Common/CmButton';
 import styled from 'styled-components';
 import { useSession } from './SessionProvider';
-import { cmAxiosPost } from '../api/common';
+import { cmFetchPost } from '../api/common';
 
 const HeaderStyle = styled.div`
     width: 100%;
@@ -37,13 +37,16 @@ const Header = () => {
 
     //logout
     const onLogout = async () => {
-        cmAxiosPost.post('/logout');
-    //     const { error } = await supabase.auth.signOut();
-
-    //     setUserInfo(null);
         
-    //     if(error) console.log('error: ', error);
-    //     alert('로그아웃 되었습니다.');
+        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/logout';
+        const fetchParams = {
+            email: session.email
+        }
+
+        debugger;
+        
+        const data = await cmFetchPost(fetchUrl, fetchParams);
+        console.log(`logout data: ${data}, session: ${session}`);
     }
 
     

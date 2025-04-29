@@ -81,7 +81,7 @@ const Signup = ({children}) => {
     //signup form submit
     const { register, handleSubmit, reset, formState: {errors}, getValues } = useForm();
     const onSubmit = async (inputs) => {
-
+        console.log(`onSubmit click .. inputs: ${inputs}`)
         
         try{
             const res = await cmAxiosPost.post('/user/signup', inputs);
