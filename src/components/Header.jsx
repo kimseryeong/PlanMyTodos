@@ -1,10 +1,9 @@
 // import './Header.css';
 import Login from './Login';
 import Signup from './Signup';
-import CmButton from './Common/CmButton';
+import Logout from './Logout';
 import styled from 'styled-components';
 import { useSession } from './SessionProvider';
-import { cmFetchPost } from '../api/common';
 
 const HeaderStyle = styled.div`
     width: 100%;
@@ -33,31 +32,15 @@ const EmailStyle = styled.span`
 const Header = () => {
 
     const { session, fetchSession } = useSession();
-    console.log('Header session > ', session);
-
-    //logout
-    const onLogout = async () => {
-        
-        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/logout';
-        const fetchParams = {
-            email: session.email
-        }
-
-        debugger;
-        
-        const data = await cmFetchPost(fetchUrl, fetchParams);
-        console.log(`logout data: ${data}, session: ${session}`);
-    }
-
+    console.log(session);
     
-
     return (
         <HeaderStyle>
             <Buttons>
                 {session ? 
                 <>
                     <EmailStyle>{ session.email }</EmailStyle>
-                    <CmButton action={onLogout} name={'Logout'}></CmButton>
+                    <Logout>Logout</Logout>
                 </>
                 :
                 <>
