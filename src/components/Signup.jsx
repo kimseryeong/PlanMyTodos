@@ -1,6 +1,5 @@
 import CmButton from './Common/CmButton';
 import CmErrorMsg from './Common/CmErrorMsg';
-import axios from 'axios';
 
 import React, { useState } from 'react';
 import Modal from 'react-modal';
@@ -9,6 +8,9 @@ import styled from 'styled-components';
 import { FaUser } from 'react-icons/fa'
 import { RiLockPasswordLine } from "react-icons/ri";
 import { RiLockPasswordFill } from "react-icons/ri";
+
+import { cmAxiosPost } from '../api/common';
+import { useSession } from './SessionProvider';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -74,15 +76,28 @@ const Signup = ({children}) => {
         })
     }
 
+    const { session, fetchSession } = useSession();
+
     //signup form submit
     const { register, handleSubmit, reset, formState: {errors}, getValues } = useForm();
     const onSubmit = async (inputs) => {
-        try{
-            const res = await axios.post('https://planmytodos-api-production.up.railway.app/user/signup', inputs, {
-                withCredentials: true,
-            });
 
-            console.log('signup res', res)
+        
+        try{
+            const res = await cmAxiosPost.post('/user/signup', inputs);
+            
+            if(res.ok){
+                alert(res.data.message);
+                fetchSession();
+                return;
+            }
+            const data = await res.json();
+
+            debugger
+            if(data.isError){
+                console.error('fail signup because of :', data.message);
+            }
+
         }
         catch (error) {
             console.error("axios signup 실패", error);
