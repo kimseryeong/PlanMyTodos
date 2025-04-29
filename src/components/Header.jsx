@@ -4,6 +4,7 @@ import Signup from './Signup';
 import CmButton from './Common/CmButton';
 import styled from 'styled-components';
 import { useSession } from './SessionProvider';
+import { cmAxiosPost } from '../api/common';
 
 const HeaderStyle = styled.div`
     width: 100%;
@@ -36,6 +37,7 @@ const Header = () => {
 
     //logout
     const onLogout = async () => {
+        cmAxiosPost.post('/logout');
     //     const { error } = await supabase.auth.signOut();
 
     //     setUserInfo(null);
