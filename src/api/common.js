@@ -1,5 +1,4 @@
-import { useSetRecoilState } from "recoil";
-import { loadingState, todoState } from "../lib/atom";
+import axios from "axios";
 
 export const cmFetchPost = async ( fetchUrl, fetchParams ) => {
 
@@ -22,3 +21,11 @@ export const cmFetchPost = async ( fetchUrl, fetchParams ) => {
     return data;
 }
 
+export const cmAxiosPost = axios.create({
+    baseURL: 'https://planmytodos-api-production.up.railway.app/',
+    timeout: 1000,
+    headers:{
+        'Content-Type': 'application/json',
+        withCredentials: true,
+    }
+})
