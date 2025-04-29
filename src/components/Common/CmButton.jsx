@@ -21,6 +21,6 @@ const Button = styled.button`
 
 export default function CmButton({name, action, backColor}){
     return (
-        <Button onClick={() => action()} backColor={backColor}>{name}</Button>
+        <Button type="button" onClick={() => action()} backColor={backColor}>{name}</Button>
     );
 }
