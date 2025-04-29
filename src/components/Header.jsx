@@ -1,4 +1,3 @@
-// import './Header.css';
 import Login from './Login';
 import Signup from './Signup';
 import Logout from './Logout';
@@ -33,7 +32,7 @@ const Header = () => {
 
     const { session, fetchSession } = useSession();
     console.log(session);
-    
+
     return (
         <HeaderStyle>
             <Buttons>
