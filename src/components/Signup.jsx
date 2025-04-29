@@ -81,10 +81,11 @@ const Signup = ({children}) => {
     //signup form submit
     const { register, handleSubmit, reset, formState: {errors}, getValues } = useForm();
     const onSubmit = async (inputs) => {
-        console.log(`onSubmit click .. inputs: ${inputs}`)
+        console.log(`onSubmit click .. inputs:`, inputs)
         
         try{
             const res = await cmAxiosPost.post('/user/signup', inputs);
+            debugger
             
             if(res.ok){
                 alert(res.data.message);
@@ -93,7 +94,6 @@ const Signup = ({children}) => {
             }
             const data = await res.json();
 
-            debugger
             if(data.isError){
                 console.error('fail signup because of :', data.message);
             }
@@ -107,7 +107,7 @@ const Signup = ({children}) => {
     
     return (
         <>
-            <CmButton action={signupClick} name={children}></CmButton>
+            <CmButton type={'button'} action={signupClick} name={children}></CmButton>
 
             <Modal
                 isOpen={signupOpen}
@@ -173,8 +173,8 @@ const Signup = ({children}) => {
                         {errors.passwordCheck && <CmErrorMsg msg={ errors.passwordCheck.message }></CmErrorMsg>}
                     </SignupForm>
                     <Buttons>
-                        <CmButton action={closeSignup} name={'cancel'}></CmButton>
-                        <CmButton  action={()=>{}} name={children} backColor={true} type='submit'></CmButton>
+                        <CmButton action={closeSignup} name={'cancel'} type={'button'}></CmButton>
+                        <CmButton  action={()=>{}} name={children} backColor={true} type={'submit'}></CmButton>
                     </Buttons>
                 </div>
             </form>

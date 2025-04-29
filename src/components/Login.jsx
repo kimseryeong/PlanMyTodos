@@ -8,6 +8,8 @@ import CmButton from './Common/CmButton';
 import CmErrorMsg from './Common/CmErrorMsg';
 import { ReactSVG } from "react-svg";
 import axios from "axios";
+import { cmFetchPost } from '../api/common';
+import { useSession } from './SessionProvider';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -112,6 +114,9 @@ const Login = ({children}) => {
 
     const csrfToken = getCsrfToken();
 
+    const { session, fetchSession } = useSession();
+    const [ loginError, setLoginError ] = useState(null);
+
     //login modal 
     const [loginOpen, setLoginOpen] = useState(false);
     const loginClick = () => setLoginOpen(true);
@@ -122,30 +127,32 @@ const Login = ({children}) => {
             ,password: null
         })
     }
-
+    
     //login form submit
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
     const onSubmit = async (inputs) => {
-        
-
         try{
-            const res = await axios.post('https://planmytodos-api-production.up.railway.app/user/login', inputs, {
-                withCredentials: true,
-            });
-            console.log("axios 로그인 성공!", res.data);
+
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/user/login';
+            const data = await cmFetchPost(fetchUrl, inputs);
+            
+            if(data.isError){
+                setLoginError(data.message);
+                return;
+            }
+            
+            fetchSession();
         }
         catch (error) {
             console.error("axios 로그인 실패", error);
             
         }
-
     }
-
 
 
     return (
         <>
-            <CmButton action={loginClick} name={children}></CmButton>
+            <CmButton type={'button'} action={loginClick} name={children}></CmButton>
 
             <Modal
                 isOpen={loginOpen}
@@ -178,7 +185,7 @@ const Login = ({children}) => {
                             })}
                         />
                     </InputWrap>
-                    {errors.email && <CmErrorMsg msg={errors.email.message}></CmErrorMsg>}
+                    { errors.email && <CmErrorMsg msg={errors.email.message}></CmErrorMsg> }
                     
                     <InputWrap>
                         <Icon><GrSecure size='25'/></Icon>
@@ -191,11 +198,13 @@ const Login = ({children}) => {
                             })}
                         />
                     </InputWrap>
-                    {errors.password && <CmErrorMsg msg={errors.password.message}></CmErrorMsg>}
+                    { errors.password && <CmErrorMsg msg={errors.password.message}></CmErrorMsg> }
+
+                    { loginError && <CmErrorMsg msg={loginError} ></CmErrorMsg> }
                 </LoginForm>
                 <Buttons>
-                    <CmButton action={closeLogin} name={'cancel'}></CmButton>
-                    <CmButton action={()=>{}} name={children} backColor={true} type='submit'></CmButton>
+                    <CmButton action={closeLogin} name={'cancel'} type={'button'}></CmButton>
+                    <CmButton action={()=>{ }} name={children} backColor={true} type={'submit'}></CmButton>
                 </Buttons>
             </form>
 
