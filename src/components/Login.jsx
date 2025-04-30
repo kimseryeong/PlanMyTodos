@@ -133,7 +133,7 @@ const Login = ({children}) => {
     const onSubmit = async (inputs) => {
         try{
 
-            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/user/login';
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/auth/login';
             const data = await cmFetchPost(fetchUrl, inputs);
             
             if(data.isError){
@@ -141,7 +141,7 @@ const Login = ({children}) => {
                 return;
             }
             
-            fetchSession();
+            //fetchSession();
         }
         catch (error) {
             console.error("axios 로그인 실패", error);
