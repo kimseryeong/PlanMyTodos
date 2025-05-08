@@ -7,9 +7,11 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { dateState, todoState, errorState } from '../../lib/atom';
 import Loading from '../../Loading';
 import CmButton from '../Common/CmButton';
-import { CmScrollStyle } from '../Common/CmScrollStyle'
-import { useSession } from '../SessionProvider'
+import { CmScrollStyle } from '../Common/CmScrollStyle';
+import { useSession } from '../SessionProvider';
 import { cmFetchPost } from '../../api/common';
+import { LoginModal } from '../LoginModal';
+import { TodoModal } from './TodoModal';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -105,73 +107,29 @@ const Buttons = styled.div`
 export default function TodoCreate(){
     const { session, fetchSession } = useSession();
     const email = session ? session.email : null;
-    const date = useRecoilValue(dateState);
-    const setTodoList = useSetRecoilState(todoState);
+    
     const [loading, setLoading] = useState(false);
-    
-    const [todoTitle, setTodoTitle] = useState(''); //사용자 입력 todo title
-    const [todoContent, setTodoContent] = useState(''); //사용자 입력 todo content
-    
-    const [isOpen, setIsOpen] = useState(false);
-    const onModal = () => {
-        setIsOpen(true);
-        setTodoTitle('');
-        setTodoContent('');
-    }
-    const closeModal = () => setIsOpen(false);
 
-    const onCreate = async () => {
-        
-        setLoading(true);
-        
-        closeModal();
-        
-        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/createTodo';
-        const fetchParams = {
-            email: email,
-            title: todoTitle,
-            content: todoContent, 
-            startAt: date,
-            endAt: date,
+    const [ showLoginModal, setShowLoginModal ] = useState(false);
+    const [ showTodoModal, setShowTodoModal ] = useState(false);
+
+    const handleSetModal = () => {
+
+        if(email){
+            setShowTodoModal(true);
         }
-        const data = await cmFetchPost(fetchUrl, fetchParams);
-
-        setTodoList((prev) => [data, ...prev]);
-
-        setLoading(false);
-        
+        else{
+            setShowLoginModal(true);
+        }
     }
 
     return (
         <>
-            {email ? 
-            <CreateItem onClick={onModal} ><MdAdd />할 일 추가</CreateItem> 
-            : <div>로그인 후 이용 가능합니다.</div>
-            }
+            <CreateItem onClick={handleSetModal}> <MdAdd /> Add new todo</CreateItem> 
             {loading && <Loading loading={loading}/>}
-            <Modal
-                isOpen={isOpen}
-                onRequestClose={closeModal}
-                style={style}
-            >
-                <ModalHead onClick={closeModal} >
-                    <span>할 일 추가</span>
-                    <IoCloseOutline className='icon' size='25'/>
-                </ModalHead>
-                <ModalBody>
-                    <Wrap>
-                        <div>제목</div>
-                        <Input autoFocus onChange={(e) => setTodoTitle(e.target.value)} />
-                    </Wrap>
-                    <Wrap>
-                        <div>내용</div>
-                        <Textarea onChange={(e) => setTodoContent(e.target.value)} />
-                    </Wrap>
-                </ModalBody>
-                <Buttons>
-                    <CmButton action={onCreate} name={'등록'} backColor={true}></CmButton>
-                </Buttons>
-            </Modal>
+            
+            {showLoginModal && <LoginModal isOpen={showLoginModal} onRequestClose={() => setShowLoginModal(false)}/>}
+            {showTodoModal && <TodoModal email={email} isOpen={showTodoModal} onRequestClose={() => setShowTodoModal(false)}/>}
         
         </>
     );

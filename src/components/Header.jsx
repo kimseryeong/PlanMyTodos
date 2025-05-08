@@ -4,7 +4,7 @@ import { useSession } from './SessionProvider';
 
 const HeaderStyle = styled.div`
     width: 100%;
-    height: 60px;
+    height: 30px;
     position: fixed;
     display: flex;
     font-family: 'pretendard';
