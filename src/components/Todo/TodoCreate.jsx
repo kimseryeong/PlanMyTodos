@@ -115,7 +115,7 @@ export default function TodoCreate(){
 
     const handleSetModal = () => {
 
-        if(email){
+        if(!email){
             setShowTodoModal(true);
         }
         else{
@@ -125,11 +125,11 @@ export default function TodoCreate(){
 
     return (
         <>
-            <CreateItem onClick={handleSetModal}> <MdAdd /> Add new todo</CreateItem> 
+            <CreateItem onClick={handleSetModal}> <MdAdd />New</CreateItem> 
             {loading && <Loading loading={loading}/>}
             
             {showLoginModal && <LoginModal isOpen={showLoginModal} onRequestClose={() => setShowLoginModal(false)}/>}
-            {showTodoModal && <TodoModal email={email} isOpen={showTodoModal} onRequestClose={() => setShowTodoModal(false)}/>}
+            {showTodoModal && <TodoModal title="New" email={email} isOpen={showTodoModal} onRequestClose={() => setShowTodoModal(false)}/>}
         
         </>
     );

@@ -2,13 +2,13 @@ import { dateState } from '../../lib/atom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 
-
-//component style
 const TodoHeadStyle = styled.span`
     margin: 0;
     margin-right: auto;
     font-size: 20px;
-    box-shadow: inset 0 -11px #bee1f7;
+    line-height: normal;
+    box-shadow: inset 0 -11px ${({theme}) => theme.colors.primary};
+
 `;
 
 export default function TodoHead() {
