@@ -5,7 +5,6 @@ import styled from 'styled-components';
 const ContentsStyle = styled.div`
     height: 100vh;
     display: flex;
-    padding-top: 60px;
     margin: 0 50px;
 `;
 

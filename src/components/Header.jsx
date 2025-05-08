@@ -1,5 +1,3 @@
-import Login from './Login';
-import Signup from './Signup';
 import Logout from './Logout';
 import styled from 'styled-components';
 import { useSession } from './SessionProvider';
@@ -9,45 +7,37 @@ const HeaderStyle = styled.div`
     height: 60px;
     position: fixed;
     display: flex;
-    align-items: center;
-    border-bottom: 2px solid #ddd;
-    background-color: #fff;
     font-family: 'pretendard';
 `;
 
-const Buttons = styled.div`
+const UserInfo = styled.div`
     display: flex;
     margin-left: auto;
-    padding: 0 10px;
     align-items: center;
+    padding-right: 20px;
 `;
 
 const EmailStyle = styled.span`
     font-size: 18px;
-    margin-right: 5px;
-    //background-color: #EAF2F8;
+    line-height: normal;
+    font-weight: 700;
+    margin-right: 10px;
 `;
 
 const Header = () => {
 
     const { session, fetchSession } = useSession();
-    console.log(session);
 
     return (
         <HeaderStyle>
-            <Buttons>
-                {session ? 
-                <>
-                    <EmailStyle>{ session.email }</EmailStyle>
-                    <Logout>Logout</Logout>
-                </>
-                :
-                <>
-                    <Login>Login</Login>
-                    <Signup>Sign Up</Signup>
-                </>
-                }
-            </Buttons>
+            {session && 
+            <>
+                <UserInfo>
+                    <EmailStyle>{session.email}</EmailStyle>
+                    <Logout />
+                </UserInfo>
+            </>
+            }
         </HeaderStyle>
     );
 }

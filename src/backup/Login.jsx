@@ -4,12 +4,11 @@ import { useForm } from 'react-hook-form';
 import { FaPray, FaUser } from 'react-icons/fa'
 import { GrSecure } from 'react-icons/gr'
 import styled from 'styled-components';
-import CmButton from './Common/CmButton';
-import CmErrorMsg from './Common/CmErrorMsg';
+import CmButton from '../components/Common/CmButton';
+import CmErrorMsg from '../components/Common/CmErrorMsg';
 import { ReactSVG } from "react-svg";
-import axios from "axios";
 import { cmFetchPost } from '../api/common';
-import { useSession } from './SessionProvider';
+import { useSession } from '../components/SessionProvider';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}

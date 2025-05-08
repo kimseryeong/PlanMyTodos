@@ -1,5 +1,5 @@
-import CmButton from './Common/CmButton';
-import CmErrorMsg from './Common/CmErrorMsg';
+import CmButton from '../components/Common/CmButton';
+import CmErrorMsg from '../components/Common/CmErrorMsg';
 
 import React, { useState } from 'react';
 import Modal from 'react-modal';
@@ -10,7 +10,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { RiLockPasswordFill } from "react-icons/ri";
 
 import { cmAxiosPost } from '../api/common';
-import { useSession } from './SessionProvider';
+import { useSession } from '../components/SessionProvider';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
