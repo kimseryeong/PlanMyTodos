@@ -10,14 +10,14 @@ export const FullCalendarStyle = styled.div`
     .fc {
         width: 100%;
         font-size: 13px;
-        font-family: 'pretendard';
+        //font-family: 'pretendard';
         font-weight: 500;
     }
 
 
     //date text css
     .fc .fc-toolbar-title {
-        font-family: 'pretendard';
+        //font-family: 'pretendard';
         font-weight: 700;
     }
 
@@ -33,7 +33,7 @@ export const FullCalendarStyle = styled.div`
     }
     
     .btn-primary:hover{
-        background-color: #EAF2F8;
+        background-color: ${({theme}) => theme.colors.primary}; //#EAF2F8;
     }
     .fc-prev-button,
     .fc-next-button{
@@ -58,7 +58,7 @@ export const FullCalendarStyle = styled.div`
 
     //클릭한 날짜 배경색
     .fc-highlight {
-        background: #EAF2F8 !important;
+        background: ${({theme}) => theme.colors.light} !important;
     }
 
     //today 배경
@@ -69,8 +69,8 @@ export const FullCalendarStyle = styled.div`
 
     //today 글씨
     .fc-day-today > * > .fc-daygrid-day-top a{
-        background-color: #EAF2F8;
-        border: 1px solid #A9CCE3;
+        background-color: ${({theme}) => theme.colors.light};
+        border: 1px solid ${({theme}) => theme.colors.primary};
         border-radius: 40px;
         font-weight: 800;
         padding: 2px;
@@ -83,12 +83,12 @@ export const FullCalendarStyle = styled.div`
     .fc .fc-popover-header{
         border-bottom-color: #fff;
         background-color: #fff;
-        font-family: pretendard;
+        //font-family: pretendard;
         font-weight: 700;
     }
 
     .fc .fc-more-popover .fc-popover-body{
-        font-family: pretendard;
+        //font-family: pretendard;
         font-weight: 700;
     }
 

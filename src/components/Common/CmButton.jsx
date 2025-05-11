@@ -1,20 +1,20 @@
 import styled, { css } from "styled-components";
 
 const Button = styled.button`
-    width: 80px;
+    width: 70px;
     height: 35px;
     font-size: 16px;
     background-color: white;
-    border: 2px solid #ddd;
-    border-radius: 10px;
+    border: 1px solid ${({theme}) => theme.colors.strong};
+    border-radius: 20px;
     margin: 5px;
 
     ${props => props.backColor && css`
-        background-color: #EAF2F8;
+        background-color: ${({theme}) => theme.colors.light};
     `}
 
     &:hover{
-        box-shadow: 1px 1px 1px #ddd;
+        box-shadow: 1px 1px 1px ${({theme}) => theme.colors.strong};
         cursor: pointer;
     }
 `;
