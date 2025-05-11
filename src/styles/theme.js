@@ -1,8 +1,8 @@
 export const theme = {
     colors: {
-        primary: "#bee1f7",
-        light: "#EAF2F8",
-        strong: "#A9CCE3",
+        primary: "#a2d2ff", //bee1f7
+        light: "#cae9ff", //"#EAF2F8",
+        strong: "#8ecae6",
     },
     fontSizes: {
         sm: "14px",

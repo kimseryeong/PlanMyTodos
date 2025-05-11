@@ -2,6 +2,8 @@ import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   body {
+    font-family: 'pretendard', sans-serif;
+
     --margin-default: ${({ theme }) => theme.margins.desktop};
 
     @media (max-width: 858px) {
