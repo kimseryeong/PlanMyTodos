@@ -1,0 +1,46 @@
+{
+    "allTodos": [
+        {
+            "id": 1, 
+            "offsetDays": 0, 
+            "title": "Use PlanMyTodos",
+            "content": "1. Please to login with Google \n2. Click the [ + New ] button \n3. Create your new Todo!",
+            "completed": false
+        }
+        ,{
+            "id": 2, 
+            "offsetDays": 0, 
+            "title": "Be happy ✨",
+            "content": "",
+            "completed": true
+        }
+        ,{
+            "id": 3, 
+            "offsetDays": 2, 
+            "title": "Buy groceries",
+            "content": "carrot, tofu, potato, salmon",
+            "completed": false
+        }
+        ,{
+            "id": 4, 
+            "offsetDays": 8, 
+            "title": "Work out at the fitness center",
+            "content": "1. Running Machine \n2. Squat",
+            "completed": false
+        }
+        ,{
+            "id": 5, 
+            "offsetDays": -3, 
+            "title": "Take supplements",
+            "content": "vitaminD, biotin, lactobacillus",
+            "completed": true
+        }
+        ,{
+            "id": 6, 
+            "offsetDays": 3, 
+            "title": "Clean my house",
+            "content": "especially bathroom ⭐️",
+            "completed": false
+        }
+    ]
+}

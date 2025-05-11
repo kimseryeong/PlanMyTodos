@@ -17,7 +17,10 @@ import { FullCalendarStyle } from './FullcalendarStyle'
 import { dateState, todoState } from '../../lib/atom';
 import { useEffect, useState} from 'react';
 import { useSession } from '../SessionProvider';
-import { cmFetchPost } from '../../api/common';
+import { cmFetchPost, cmDateToString } from '../../api/common';
+
+import sampleData from '../../data/sampleTodos.json'
+
 
 const CalendarStyle = styled.div`
     height: 100%;
@@ -40,7 +43,7 @@ const style = {
         ,boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
         ,padding: '20px'
         ,zIndex: 99999
-        ,fontFamily: 'pretendard'
+        //,fontFamily: 'pretendard'
         ,display: 'flex'
         ,flexDirection: 'column'
     }
@@ -114,7 +117,7 @@ const Content = styled.div`
     font-size: 14px;
 
     pre{
-        font-family: 'pretendard';
+        //font-family: 'pretendard';
         font-size: 13.5px;
         white-space: pre-wrap;
     }
@@ -140,9 +143,27 @@ const IconBlock = styled.div`
     `}
 `;
 
+const getSampleEvents = () => {
+
+    return sampleData.allTodos.map(todo => {
+        
+        const offsetDate = new Date();
+        offsetDate.setDate(offsetDate.getDate() + todo.offsetDays);
+        
+        return {
+            title: todo.title,
+            id: todo.id, 
+            start: cmDateToString(offsetDate),
+            backgroundColor: '#a2d2ff',
+            fontSize: '12px',
+            className: todo.completed ? 'cmpltTodos' : '',
+            description: todo.content,
+        }
+    })
+}
+
 export default function Calendar () {
     const { session, fetchSession } = useSession();
-    const userEmail = session ? session.email : null;
     const [newTodoTitle, setNewTodoTitle] = useState('');
     const [newTodoContent, setNewTodoContent] = useState('');
     const [date, setDate] = useRecoilState(dateState);
@@ -155,11 +176,14 @@ export default function Calendar () {
         setIsEdit(false);
     }
     const [isEdit, setIsEdit] = useState(false);
-
+    
     const [calEvents, setCalEvents] = useState([]);
+
     useEffect(()=>{
-        if(!userEmail) {
-            setCalEvents([]);
+        if(!session) {
+            const sampleEvents = getSampleEvents();
+            setCalEvents(sampleEvents);
+
             return;
         }
 
@@ -167,9 +191,11 @@ export default function Calendar () {
             
             const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/fetchAllTodos';
             const fetchParams = {
-                email: userEmail
+                email: session
             }
             const data = await cmFetchPost(fetchUrl, fetchParams);
+
+            if(!data) return;
 
             const events = data.reduce((acc, todo)=> {
                 const startDate = `${todo.startAt[0]}-${String(todo.startAt[1]).padStart(2, '0')}-${todo.startAt[2]}`
@@ -192,11 +218,13 @@ export default function Calendar () {
         
         loadEvents();
 
-    }, [userEmail, todoList])
+    }, [session, todoList])
     
     
     //날짜 상태관리
     const onClickDate = (date) => {
+        console.log('onClickDate > date', date);
+
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
@@ -208,8 +236,6 @@ export default function Calendar () {
     //캘린더 이벤트 클릭
     const onClickEvent = (data) => {
         setIsOpen(true);
-
-        console.log('event > ', data.event);
 
         const title = data.event._def.title;
         const content = data.event._def.extendedProps.description;
@@ -223,16 +249,11 @@ export default function Calendar () {
     
     //이벤트 삭제
     const onDelete = async () => {
-        
-
-        console.log('onDelete [title, startAt, id, content] > ', event);
-        
-        console.log(userEmail);
 
         const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/deleteTodo';
         const fetchParams = {
             id: Number(event[2]),
-            email: userEmail,
+            email: session,
         }
 
         const data = await cmFetchPost(fetchUrl, fetchParams);
@@ -253,7 +274,7 @@ export default function Calendar () {
             const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
             const fetchParams = {
                 id: Number(event[2]),
-                email: userEmail,
+                email: session,
                 title: newTodoTitle,
                 content: newTodoContent,
                 
