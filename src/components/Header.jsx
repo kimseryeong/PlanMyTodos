@@ -33,7 +33,7 @@ const Header = () => {
             {session && 
             <>
                 <UserInfo>
-                    <EmailStyle>{session.email}</EmailStyle>
+                    <EmailStyle>{session}</EmailStyle>
                     <Logout />
                 </UserInfo>
             </>

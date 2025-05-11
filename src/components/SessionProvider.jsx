@@ -1,4 +1,5 @@
 import { Children, createContext, useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const SessionContext = createContext(null);
 
@@ -8,19 +9,21 @@ export const SessionProvider = ({ children }) => {
     const fetchSession = async () => {
 
         try {
-            const response = await fetch('https://planmytodos-api-production.up.railway.app/user/me', {
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/user/info'
+
+            const response = await fetch(fetchUrl, {
                 method: 'GET',
                 credentials: "include",
             })
 
             if(response.ok){
                 const data = await response.json();
-                setSession(data);
+                
+                if(data.email){
+                    setSession(data.email);
+                    toast.success('Successfully Login!');
+                }
             }
-            else{
-                setSession(null);
-            }
-
         }
         catch(error){
             console.error('fail to get session', error);
