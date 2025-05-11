@@ -3,6 +3,7 @@ export const theme = {
         primary: "#a2d2ff", //bee1f7
         light: "#cae9ff", //"#EAF2F8",
         strong: "#8ecae6",
+        back: "#fefae0"
     },
     fontSizes: {
         sm: "14px",
