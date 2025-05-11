@@ -1,9 +1,10 @@
 import { atom, selector } from 'recoil';
+import { cmDateToString } from '../api/common';
 
 //날짜 상태관리
 export const dateState = atom({
     key: 'dateState'
-    ,default: `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
+    ,default: cmDateToString(new Date())
 })
 
 //todolist 상태관리
