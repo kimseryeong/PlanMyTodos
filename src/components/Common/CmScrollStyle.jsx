@@ -6,7 +6,7 @@ export const CmScrollStyle = css`
         background: #ddd;
     }
     &::-webkit-scrollbar-thumb {
-        background: #A9CCE3;
+        background: ${({theme}) => theme.colors.primary}
         border-radius: 20px;
     }
     &::-webkit-scrollbar-thumb:hover{
