@@ -7,7 +7,7 @@ const TodoTemplateStyle = styled.div`
     display: flex;
     flex-direction: column;
     width: 40%;
-    font-family: 'pretendard';
+    //font-family: 'pretendard';
     font-weight: 600;
     padding-left: 30px;
     margin: 80px 0 30px;

@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
 import styled from 'styled-components';
 import { MdAdd } from "react-icons/md";
-import { IoCloseOutline } from "react-icons/io5";
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { dateState, todoState, errorState } from '../../lib/atom';
 import Loading from '../../Loading';
-import CmButton from '../Common/CmButton';
 import { CmScrollStyle } from '../Common/CmScrollStyle';
 import { useSession } from '../SessionProvider';
-import { cmFetchPost } from '../../api/common';
 import { LoginModal } from '../LoginModal';
-import { TodoModal } from './TodoModal';
+import { TodoCreateModal } from './TodoCreateModal';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -33,7 +27,7 @@ const CreateItem = styled.div`
     display: flex;
     align-items: center;
     padding: 10px;
-    color: #7FB3D5;
+    color: ${({theme}) => theme.colors.strong};
     margin-top: 15px;
     font-weight: 500;
 
@@ -106,17 +100,15 @@ const Buttons = styled.div`
 
 export default function TodoCreate(){
     const { session, fetchSession } = useSession();
-    const email = session ? session.email : null;
-    
     const [loading, setLoading] = useState(false);
 
     const [ showLoginModal, setShowLoginModal ] = useState(false);
-    const [ showTodoModal, setShowTodoModal ] = useState(false);
+    const [ showCreateModal, setShowCreateModal ] = useState(false);
 
     const handleSetModal = () => {
 
-        if(!email){
-            setShowTodoModal(true);
+        if(session){
+            setShowCreateModal(true);
         }
         else{
             setShowLoginModal(true);
@@ -129,7 +121,7 @@ export default function TodoCreate(){
             {loading && <Loading loading={loading}/>}
             
             {showLoginModal && <LoginModal isOpen={showLoginModal} onRequestClose={() => setShowLoginModal(false)}/>}
-            {showTodoModal && <TodoModal title="New" email={email} isOpen={showTodoModal} onRequestClose={() => setShowTodoModal(false)}/>}
+            {showCreateModal && <TodoCreateModal title="New" email={session} isOpen={showCreateModal} onRequestClose={() => setShowCreateModal(false)}/>}
         
         </>
     );

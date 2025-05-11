@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import { IoCloseOutline } from "react-icons/io5";
-import CmButton from '../Common/CmButton';
 
 const style = {
     overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 1000}
@@ -17,6 +16,7 @@ const style = {
         ,padding: '20px'
         ,zIndex: 1000
         ,fontFamily: 'pretendard'
+        ,backgroundColor: '#fefae0'
     }
 }
 

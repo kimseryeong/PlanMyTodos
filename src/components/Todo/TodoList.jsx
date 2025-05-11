@@ -21,7 +21,7 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
     setLoading(true);
 
     try{
-        const fetchUrl = 'http://localhost:8080/todo/fetchTodosByDate';//`https://planmytodos-api-production.up.railway.app/todo/fetchTodosByDate`;
+        const fetchUrl = `https://planmytodos-api-production.up.railway.app/todo/fetchTodosByDate`;
         const fetchParams = {
             email: userEmail,
             currentAt: date,
@@ -35,11 +35,6 @@ const loadTodoList = async (userEmail, date, setTodoList, setLoading, setError) 
             }
             ,body: JSON.stringify(fetchParams)
         })
-    
-        if(!res.ok){
-            console.error('fetchTodosListByDate error !! ');
-            return;
-        }
     
         const data = await res.json();
         setTodoList(data);

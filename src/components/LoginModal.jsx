@@ -16,6 +16,7 @@ const GoogleBtn = styled.a`
     font-weight: 700;
     border: 1px solid #1976D2;
     color: inherit;
+    background-color: #fff;
     text-decoration: none;
 
     &:hover{
@@ -36,14 +37,8 @@ const Comment = styled.span`
 `;
 
 export const LoginModal = ({isOpen, onRequestClose}) => {
-
-    const closeModal = () => {
-        onRequestClose();
-
-    }
     
     return (
-        <>
         <CmModal isOpen={isOpen} onRequestClose={onRequestClose}>
             <Comment>Please Login to use our service 😽 !</Comment>
             
@@ -52,6 +47,5 @@ export const LoginModal = ({isOpen, onRequestClose}) => {
                 <span>Login with Google</span>
             </GoogleBtn>
         </CmModal>
-        </>
     )
 }

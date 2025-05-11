@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { dateState, todoState, errorState } from '../../lib/atom';
@@ -7,6 +6,7 @@ import CmButton from '../Common/CmButton';
 import { CmScrollStyle } from '../Common/CmScrollStyle'
 import { cmFetchPost } from '../../api/common';
 import { CmModal } from '../Common/CmModal';
+import { toast } from 'react-hot-toast';
 
 
 const Wrap = styled.div`
@@ -32,11 +32,14 @@ const Input = styled.input`
     outline: none;
     font-size: 14px;
     box-sizing: border-box;
-    border: 1px solid #ddd;
+    border: 1px solid #faedcd;
 `;
 
 const Buttons = styled.div`
-    margin-top: 10px;
+    margin: 0;
+    margin-left: auto;
+    display: flex;
+    justify-content: right;
 `;
 
 const Textarea = styled.textarea`
@@ -45,18 +48,18 @@ const Textarea = styled.textarea`
     outline: none;
     font-size: 14px;
     box-sizing: border-box;
-    border: 1px solid #ddd;
+    border: 1px solid #faedcd;
     height: 100px;
 
     ${CmScrollStyle}
 `;
 
-export const TodoModal = ({ title, email, isOpen, onRequestClose}) => {
+export const TodoCreateModal = ({ title, email, isOpen, onRequestClose}) => {
 
     const setTodoList = useSetRecoilState(todoState);
     const date = useRecoilValue(dateState);
-    const [todoTitle, setTodoTitle] = useState(''); //사용자 입력 todo title
-    const [todoContent, setTodoContent] = useState(''); //사용자 입력 todo content
+    const [todoTitle, setTodoTitle] = useState('');
+    const [todoContent, setTodoContent] = useState('');
     
     const [loading, setLoading] = useState(false);
 
@@ -77,10 +80,11 @@ export const TodoModal = ({ title, email, isOpen, onRequestClose}) => {
             }
             const data = await cmFetchPost(fetchUrl, fetchParams);
             
+            toast.success('Successfully Added!');
             setTodoList((prev) => [data, ...prev]);
         }
         catch(error){
-            console.error(error);
+            toast.error("Failed to add new todo");
         }
         
         setLoading(false);

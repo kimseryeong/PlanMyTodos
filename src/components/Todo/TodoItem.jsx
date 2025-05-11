@@ -1,16 +1,17 @@
 import styled, { css } from 'styled-components';
 import { MdCheck, MdDelete } from "react-icons/md";
-import { IoCloseOutline } from "react-icons/io5";
 import { AiFillEdit } from "react-icons/ai";
 
 import React, { useEffect, useState } from 'react';
-import Modal from 'react-modal';
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 
 import { CmScrollStyle } from '../Common/CmScrollStyle';
-import CmButton from '../Common/CmButton';
 import { todoState, loadingState, dateState } from '../../lib/atom'
 import { cmFetchPost } from '../../api/common';
+import { useSession } from '../SessionProvider';
+import toast from 'react-hot-toast';
+import { TodoUpdateModal } from '../Todo/TodoUpdateModal'
+import { LoginModal } from '../LoginModal';
 
 const Hover = styled.div`
     display: flex;
@@ -24,7 +25,7 @@ const Hover = styled.div`
 `;
 const RemoveBlock = styled.button`
     &:hover{
-        color: #ff6b6b;
+        color: #ef476f;
     }
     color: #ced4da;
     display: none;
@@ -33,16 +34,20 @@ const RemoveBlock = styled.button`
 `;
 const UpdateBlock = styled.div`
     &:hover{
-        color: #7FB3D5;
+        color: ${({theme}) => theme.colors.primary};
     }
     margin-right: 10px;
     display: none;
 `;
 const TodoItemStyle = styled.div`
+    margin: 5px 0;
     padding: 12px;
+    background-color: ${({theme}) => theme.colors.back};
+    border-radius: 16px;
+
+
     &:hover {
-        border: 1px solid #efefef;
-        border-radius: 16px;
+        border: 1px solid #fbea9d;
 
         ${RemoveBlock} {
             display: initial;
@@ -65,8 +70,8 @@ const CheckBlock = styled.div`
     margin-right: 20px;
     cursor: pointer;
     ${props => props.done && css`
-        border: 1px solid #7FB3D5;
-        color: #7FB3D5;
+        border: 1px solid ${({theme}) => theme.colors.primary};
+        color: ${({theme}) => theme.colors.primary};
     `}
 `;
 const Text = styled.div`
@@ -85,65 +90,6 @@ const Text = styled.div`
         font-size: 13px;
         color: #8c8c8c;
     }
-`;
-const ModalHead = styled.div`
-    display: flex;
-    align-items: center;
-    .icon{
-        margin-left: auto; 
-        cursor: pointer;
-    }
-    span{
-        margin-right: auto;
-        font-weight: 700;
-    }
-`;
-const ModalBody = styled.div`
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-const Wrap = styled.div`
-    display:flex;
-    width: 100%;
-    align-items: start;
-    justify-content: center;
-    margin: 5px 0;
-
-    div{
-        width: 50px;
-        font-size: 14px;
-        font-weight: 500;
-    }
-`;
-
-const Input = styled.input`
-    height: 40px;
-    width: 100%;
-    padding: 8px;
-    outline: none;
-    font-size: 14px;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-`;
-
-const Textarea = styled.textarea`
-    padding: 8px;
-    width: 100%;
-    outline: none;
-    font-size: 14px;
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    height: 100px;
-
-    ${CmScrollStyle}
-`;
-
-
-const Buttons = styled.div`
-    margin-top: 10px;
 `;
 
 const ItemHead = styled.div`
@@ -186,81 +132,84 @@ const style = {
 }
 
 function TodoItem ({id, title, content, done, startAt, endAt, email}) {
+    const { session } = useSession();
+
     const date = useRecoilValue(dateState);
     const setTodoList = useSetRecoilState(todoState);
-    const [newTodoTitle, setNewTodoTitle] = useState(title);
-    const [newTodoContent, setNewTodoContent] = useState(content);
-    const [isOpen, setIsOpen] = useState(false);
-    const onModal = () => setIsOpen(true);
-    const onClose = () => {
-        setIsOpen(false);
 
-        //input, textarea onChange 초기화
-        setNewTodoTitle(title);
-        setNewTodoContent(content);
-    }
-    const [loading, setLoading] = useRecoilState(loadingState);
+    const setLoading = useSetRecoilState(loadingState);
 
-    useEffect(() => {
-        setNewTodoTitle(title);
-        setNewTodoContent(content);
-    }, [title, content])
+    const [ showLoginModal, setShowLoginModal ] = useState(false);
+    const [ showUpdateModal, setShowUpdateModal ] = useState(false);
 
-    //수정
-    const onUpdate = async () => {
-        setLoading(true);
-
-        onClose();
-
-        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
-        const fetchParams = {
-            id: id,
-            email: email,
-            title: newTodoTitle,
-            content: newTodoContent,
-            startAt: startAt,
-            endAt: endAt
+    const clickUpdate = () => {
+        if(!session){
+            toast.error('Please login to continue!');
+            setShowLoginModal(true);
         }
-
-        const data = await cmFetchPost(fetchUrl, fetchParams);
-
-        setTodoList((prev) => prev.map(t => t.id === data.id ? data : t));
-        
-        setLoading(false);
+        else{
+            setShowUpdateModal(true);
+        }
     }
+
 
     //삭제
     const onDelete = async () => {
-        setLoading(true);
-
-        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/deleteTodo';
-        const fetchParams = {
-            id: id,
-            email: email,
-            currentAt: date
+        if(!session){
+            toast.error('Please login to continue!');
+            setShowLoginModal(true);
+            return;
         }
 
-        const data = await cmFetchPost(fetchUrl, fetchParams);
+        setLoading(true);
 
-        setTodoList(data);
+        try{
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/deleteTodo';
+            const fetchParams = {
+                id: id,
+                email: email,
+                currentAt: date
+            }
+    
+            const data = await cmFetchPost(fetchUrl, fetchParams);
+    
+            setTodoList(data);
+
+        }
+        catch(error){
+            toast.error("Failed to delete todo");
+        }
+
 
         setLoading(false);
     }
 
     //완료체크
     const onCheck = async () => {
-        setLoading(true);
-
-        const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
-        const fetchParams = {
-            id: id,
-            email: email,
-            completed: !done
+        if(!session){
+            toast.error('Please login to continue!');
+            setShowLoginModal(true);
+            return;
         }
 
-        const data = await cmFetchPost(fetchUrl, fetchParams);
+        setLoading(true);
 
-        setTodoList((prev) => prev.map(t => t.id === data.id ? data : t));
+        try{
+            const fetchUrl = 'https://planmytodos-api-production.up.railway.app/todo/updateTodo';
+            const fetchParams = {
+                id: id,
+                email: email,
+                completed: !done
+            }
+    
+            const data = await cmFetchPost(fetchUrl, fetchParams);
+    
+            setTodoList((prev) => prev.map(t => t.id === data.id ? data : t));
+
+        }
+        catch(error){
+            toast.error("Failed to update completion status");
+        }
 
         setLoading(false);
     }
@@ -271,47 +220,30 @@ function TodoItem ({id, title, content, done, startAt, endAt, email}) {
             <ItemHead>
                 <CheckBlock done={done} onClick={onCheck}>{done && <MdCheck/>}</CheckBlock>
                 <Text done={done}>
-                    {title}
-                    
+                    {title}  
                 </Text>
                 <Hover>
-                    <UpdateBlock onClick={onModal}><AiFillEdit/></UpdateBlock>
+                    <UpdateBlock onClick={clickUpdate}><AiFillEdit/></UpdateBlock>
                     <RemoveBlock onClick={onDelete}><MdDelete /></RemoveBlock>
                 </Hover>
             </ItemHead>
             <Content done={done}><pre>{content}</pre></Content>
 
-            <Modal
-                isOpen={isOpen}
-                onRequestClose={onClose}
-                style={style}
-            >
-                <ModalHead onClick={onClose} >
-                    <span>할 일 수정</span>
-                    <IoCloseOutline className='icon' size='25'/>
-                </ModalHead>
-                <ModalBody>
-                    <Wrap>
-                        <div>제목</div>
-                        <Input 
-                            autoFocus 
-                            onChange={(e) => setNewTodoTitle(e.target.value)}
-                            defaultValue={title} 
-                        />
-                    </Wrap>
-                    <Wrap>
-                        <div>내용</div>
-                        <Textarea 
-                            onChange={(e) => setNewTodoContent(e.target.value)} 
-                            defaultValue={content}
-                        />
-                    </Wrap>
-                </ModalBody>
-                <Buttons>
-                    <CmButton action={onUpdate} name={'수정'} backColor={true}></CmButton>
-                </Buttons>
-            </Modal>
-
+            {showLoginModal && <LoginModal isOpen={showLoginModal} onRequestClose={() => setShowLoginModal(false)}/>}
+            {showUpdateModal && (
+                <TodoUpdateModal 
+                    isOpen={showUpdateModal} 
+                    onRequestClose={() => setShowUpdateModal(false)}
+                    head={date} 
+                    id={id}
+                    title={title}
+                    content={content}
+                    done={done}
+                    startAt={startAt}
+                    endAt={endAt}
+                    email={session} 
+                />
+            )}
             
         </TodoItemStyle>
     );
